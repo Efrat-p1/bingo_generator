@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎲 מחולל לוחות בינגו לילדים</title>
+    
+    <!-- Google Fonts: Rubik (Hebrew) & Outfit (Latin/UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    
+    <!-- PPTXGenJS CDN for PowerPoint generation -->
+    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+    
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-area">
+                <span class="logo-icon">🎲</span>
+                <h1>מחולל לוחות בינגו תמונות לילדים</h1>
+            </div>
+            <p>צרו לוחות בינגו מבוססי תמונות לילדים שאינם יודעים לקרוא. הורידו קובץ PowerPoint מוכן להדפסה (A4 לרוחב, 2 לוחות A5 בעמוד) עם חלוקה מאוזנת וייחודית!</p>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="app-workspace">
+            <!-- Sidebar: Settings -->
+            <section class="settings-panel card">
+                <h2>⚙️ הגדרות המשחק</h2>
+                
+                <div class="input-group">
+                    <label for="game-title">כותרת המשחק</label>
+                    <input type="text" id="game-title" value="בינגו ציורים" placeholder="לדוגמה: בינגו חיות">
+                </div>
+                
+                <div class="input-group">
+                    <label>גודל לוח</label>
+                    <div class="grid-selector">
+                        <input type="radio" id="grid-3x3" name="grid-size" value="3x3" checked>
+                        <label for="grid-3x3" class="selector-btn">
+                            <strong>3x3</strong>
+                            <span>9 תאים (מינימום 12 תמונות)</span>
+                        </label>
+                        
+                        <input type="radio" id="grid-3x4" name="grid-size" value="3x4">
+                        <label for="grid-3x4" class="selector-btn">
+                            <strong>3x4</strong>
+                            <span>12 תאים (מינימום 16 תמונות)</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="num-participants">מספר משתתפים (לוחות)</label>
+                    <div class="number-counter">
+                        <button type="button" id="btn-dec" class="counter-btn">-</button>
+                        <input type="number" id="num-participants" value="25" min="1" max="250">
+                        <button type="button" id="btn-inc" class="counter-btn">+</button>
+                    </div>
+                </div>
+                
+                <button type="button" id="btn-generate" class="btn-primary" disabled>
+                    🎲 ייצר לוחות בינגו (PPTX)
+                </button>
+            </section>
+
+            <!-- Main Content Area: Image Uploads -->
+            <section class="upload-panel card">
+                <h2>📸 העלאת תמונות ושאלות</h2>
+                
+                <!-- Drag and Drop Zone -->
+                <div class="drag-drop-zone" id="drop-zone">
+                    <div class="zone-content">
+                        <span class="upload-icon">📤</span>
+                        <p>גררו והשליכו קבצי תמונה לכאן או <span>לחצו לבחירת קבצים</span></p>
+                        <span class="file-limits">קבצי PNG, JPG, JPEG, WEBP בלבד</span>
+                    </div>
+                    <input type="file" id="file-input" multiple accept="image/*" class="file-input-hidden">
+                </div>
+                
+                <!-- Upload Progress & Status -->
+                <div class="upload-status" id="upload-status">
+                    <div class="status-bar-container">
+                        <div class="status-bar" id="status-bar" style="width: 0%;"></div>
+                    </div>
+                    <p id="status-text">טרם הועלו תמונות. יש להעלות לפחות <span id="min-req-text">12</span> תמונות.</p>
+                </div>
+                
+                <!-- Question Cards Grid -->
+                <div class="questions-grid" id="questions-grid">
+                    <!-- Cards will be dynamically generated here -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Output & Statistics Section (Hidden initially) -->
+        <section class="stats-panel card hidden" id="stats-panel">
+            <div class="stats-header">
+                <h2>📊 נתוני איזון מתמטי של המשחק</h2>
+                <button type="button" class="btn-secondary" id="btn-download-again">📥 הורד שוב</button>
+            </div>
+            
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <span class="stat-val" id="stat-boards">0</span>
+                    <span class="stat-label">לוחות שנוצרו</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-val" id="stat-deviation">0</span>
+                    <span class="stat-label">סטיית איזון מקסימלית</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-val" id="stat-average">0</span>
+                    <span class="stat-label">ממוצע הופעות לתמונה</span>
+                </div>
+            </div>
+            
+            <div class="stats-visuals">
+                <div class="table-container">
+                    <h3>טבלת הופעות מפורטת</h3>
+                    <table class="stats-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>שאלה</th>
+                                <th>הופעות בפועל</th>
+                                <th>הופעות יעד</th>
+                                <th>סטייה</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stats-table-body">
+                            <!-- Table rows dynamically populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/balancing.js"></script>
+    <script src="js/image_helper.js"></script>
+    <script src="js/ppt_builder.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
