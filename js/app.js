@@ -1,5 +1,5 @@
 // Google Sheets Web App URL Configuration
-const GOOGLE_SCRIPT_URL = ""; // הכניסו כאן את כתובת ה-Web App שלכם מתוך Google Sheets (Apps Script)
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyEEc086LfA0wIRGbHy4j76DALgYXukJyOFNpvKBQslNWRHNXXJCjVfMsNiiXwsb3WY/exec";
 
 // Application State
 let questionsState = [];
