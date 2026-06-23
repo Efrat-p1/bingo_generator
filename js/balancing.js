@@ -56,7 +56,7 @@ function generateBalancedBoards(numBoards, boardSize, numImages, maxRestarts = 1
             capacities[imgIndices[i]] += 1;
         }
         
-        let c = new Array(M).fill(0); // actual counts
+        let appearanceCounts = new Array(M).fill(0); // actual appearance counts
         let boards = [];
         let boardsSet = new Set();
         
@@ -68,7 +68,7 @@ function generateBalancedBoards(numBoards, boardSize, numImages, maxRestarts = 1
                 // Score = remaining capacity + random noise
                 let scores = [];
                 for (let j = 0; j < M; j++) {
-                    let rem = capacities[j] - c[j];
+                    let rem = capacities[j] - appearanceCounts[j];
                     let noise = Math.random() * (0.5 + retry * 0.5);
                     scores.push({ score: rem + noise, index: j });
                 }
@@ -87,9 +87,9 @@ function generateBalancedBoards(numBoards, boardSize, numImages, maxRestarts = 1
                     boards.push(candidateBoard);
                     boardsSet.add(boardKey);
                     
-                    // Update counts
+                    // Update appearance counts
                     for (let img of candidateBoard) {
-                        c[img]++;
+                        appearanceCounts[img]++;
                     }
                     boardFound = true;
                     break;
@@ -107,14 +107,14 @@ function generateBalancedBoards(numBoards, boardSize, numImages, maxRestarts = 1
             // Calculate max deviation from targets
             let maxDev = 0;
             for (let j = 0; j < M; j++) {
-                let dev = Math.abs(c[j] - capacities[j]);
+                let dev = Math.abs(appearanceCounts[j] - capacities[j]);
                 if (dev > maxDev) {
                     maxDev = dev;
                 }
             }
             return {
                 boards: boards,
-                counts: c,
+                counts: appearanceCounts,
                 targets: capacities,
                 maxDeviation: maxDev
             };

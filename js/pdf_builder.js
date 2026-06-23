@@ -12,12 +12,12 @@ function buildBingoPdf(gameData, gridRows, gridCols, cardsPerPage = 2) {
         try {
             const title = gameData.title;
             const boards = gameData.boards;
-            const questions = gameData.questions;
+            const images = gameData.images;
             
             // Create lookup map
-            const questionsMap = {};
-            questions.forEach(q => {
-                questionsMap[q.id] = q;
+            const imagesMap = {};
+            images.forEach(imgObj => {
+                imagesMap[imgObj.id] = imgObj;
             });
             
             // Orientation & layout setup
@@ -93,8 +93,8 @@ function buildBingoPdf(gameData, gridRows, gridCols, cardsPerPage = 2) {
                 pageEl.style.width = pageWidth;
                 pageEl.style.height = pageHeight;
                 pageEl.style.display = 'grid';
-                pageEl.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-                pageEl.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+                pageEl.style.gridTemplateColumns = `repeat(${cols}, minmax(0, 1fr))`;
+                pageEl.style.gridTemplateRows = `repeat(${rows}, minmax(0, 1fr))`;
                 pageEl.style.boxSizing = 'border-box';
                 pageEl.style.background = '#FFFFFF';
                 
@@ -114,7 +114,7 @@ function buildBingoPdf(gameData, gridRows, gridCols, cardsPerPage = 2) {
                         continue;
                     }
                     
-                    const boardQuestions = boards[boardIdx];
+                    const boardImages = boards[boardIdx];
                     
                     const cardEl = document.createElement('div');
                     cardEl.style.padding = cardPadding;
@@ -176,25 +176,32 @@ function buildBingoPdf(gameData, gridRows, gridCols, cardsPerPage = 2) {
                             const cellEl = document.createElement('div');
                             cellEl.style.borderBottom = `${gridBorderWidth} solid #787878`;
                             cellEl.style.borderRight = `${gridBorderWidth} solid #787878`;
-                            cellEl.style.display = 'flex';
-                            cellEl.style.alignItems = 'center';
-                            cellEl.style.justifyContent = 'center';
+                            cellEl.style.position = 'relative';
                             cellEl.style.flex = '1';
-                            cellEl.style.padding = cellPadding;
                             cellEl.style.boxSizing = 'border-box';
                             cellEl.style.overflow = 'hidden';
                             cellEl.style.background = '#FFFFFF';
                             cellEl.style.minWidth = '0';
                             cellEl.style.minHeight = '0';
                             
-                            const qIdx = boardQuestions[r * gridCols + c];
-                            const q = questionsMap[qIdx];
+                            const imgIdx = boardImages[r * gridCols + c];
+                            const imgObj = imagesMap[imgIdx];
                             
                             const imgEl = document.createElement('img');
-                            imgEl.src = q.image_data;
+                            imgEl.src = imgObj.image_data;
+                            
+                            // Absolute centering within the cell boundaries respecting padding
+                            imgEl.style.position = 'absolute';
+                            imgEl.style.top = cellPadding;
+                            imgEl.style.bottom = cellPadding;
+                            imgEl.style.left = cellPadding;
+                            imgEl.style.right = cellPadding;
+                            imgEl.style.margin = 'auto';
                             imgEl.style.maxWidth = '100%';
                             imgEl.style.maxHeight = '100%';
-                            imgEl.style.objectFit = 'contain';
+                            imgEl.style.width = 'auto';
+                            imgEl.style.height = 'auto';
+                            imgEl.style.display = 'block';
                             
                             cellEl.appendChild(imgEl);
                             rowEl.appendChild(cellEl);
@@ -210,8 +217,8 @@ function buildBingoPdf(gameData, gridRows, gridCols, cardsPerPage = 2) {
             }
             
             // Wait for all images in the temp container to load before running html2pdf
-            const images = tempContainer.getElementsByTagName('img');
-            const imagePromises = Array.from(images).map(img => {
+            const imgElements = tempContainer.getElementsByTagName('img');
+            const imagePromises = Array.from(imgElements).map(img => {
                 if (img.complete && img.naturalWidth > 0) return Promise.resolve();
                 return new Promise(resolveImg => {
                     img.onload = resolveImg;

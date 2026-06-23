@@ -2,7 +2,7 @@
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyEEc086LfA0wIRGbHy4j76DALgYXukJyOFNpvKBQslNWRHNXXJCjVfMsNiiXwsb3WY/exec";
 
 // Application State
-let questionsState = [];
+let uploadedImages = [];
 let lastGeneratedGameData = null;
 let activeGridRows = 3;
 let activeGridCols = 3;
@@ -16,7 +16,7 @@ const btnInc = document.getElementById('btn-inc');
 const btnGenerate = document.getElementById('btn-generate');
 const dropZone = document.getElementById('drop-zone');
 const fileInput = document.getElementById('file-input');
-const questionsGrid = document.getElementById('questions-grid');
+const imagesGrid = document.getElementById('images-grid');
 const uploadStatus = document.getElementById('upload-status');
 const statusBar = document.getElementById('status-bar');
 const statusText = document.getElementById('status-text');
@@ -199,7 +199,9 @@ function updateGridRequirements() {
  */
 function handleFileSelect(e) {
     if (e.target.files.length > 0) {
-        processFiles(e.target.files);
+        // Convert live FileList to a static array to prevent it being cleared when fileInput.value is reset
+        const filesArray = Array.from(e.target.files);
+        processFiles(filesArray);
     }
     // Clear input value so same files can be re-uploaded if deleted
     fileInput.value = '';
@@ -229,7 +231,7 @@ async function processFiles(files) {
             const defaultText = file.name.split('.').slice(0, -1).join('.');
             
             // Add image to state
-            questionsState.push({
+            uploadedImages.push({
                 id: Date.now() + Math.random(), // Unique ID
                 text: defaultText,
                 image_data: result.dataUrl,
@@ -246,58 +248,58 @@ async function processFiles(files) {
         alert(errors.join('\n'));
     }
     
-    // Re-render and validate
-    renderQuestionsGrid();
+    // Re-render and validate state
+    renderUploadedImagesGrid();
     validateState();
 }
 
 /**
- * Renders the uploaded questions list in a responsive grid.
+ * Renders the uploaded images list in a responsive grid.
  */
-function renderQuestionsGrid() {
-    questionsGrid.innerHTML = '';
+function renderUploadedImagesGrid() {
+    imagesGrid.innerHTML = '';
     
-    questionsState.forEach((q, idx) => {
+    uploadedImages.forEach((imgObj) => {
         const card = document.createElement('div');
-        card.className = 'q-card';
+        card.className = 'image-card';
         
         card.innerHTML = `
-            <div class="q-img-wrap">
-                <img src="${q.image_data}" alt="תמונה לתא">
+            <div class="image-wrap">
+                <img src="${imgObj.image_data}" alt="תמונה ללוח">
             </div>
-            <div class="q-card-footer">
-                <input type="text" class="q-input" value="${q.text}" 
-                       placeholder="שאלה/תיאור" data-id="${q.id}">
-                <button type="button" class="btn-delete" data-id="${q.id}">🗑️</button>
+            <div class="image-card-footer">
+                <input type="text" class="image-input" value="${imgObj.text}" 
+                       placeholder="שם/תיאור התמונה" data-id="${imgObj.id}">
+                <button type="button" class="btn-delete" data-id="${imgObj.id}">🗑️</button>
             </div>
         `;
         
-        // Listen to changes in question text input
-        const input = card.querySelector('.q-input');
+        // Listen to changes in image text input
+        const input = card.querySelector('.image-input');
         input.addEventListener('change', (e) => {
             const id = parseFloat(e.target.dataset.id);
-            const index = questionsState.findIndex(item => item.id === id);
+            const index = uploadedImages.findIndex(item => item.id === id);
             if (index !== -1) {
-                questionsState[index].text = e.target.value;
+                uploadedImages[index].text = e.target.value;
             }
         });
         
         // Listen to delete click
         const delBtn = card.querySelector('.btn-delete');
         delBtn.addEventListener('click', () => {
-            deleteQuestion(q.id);
+            deleteUploadedImage(imgObj.id);
         });
         
-        questionsGrid.appendChild(card);
+        imagesGrid.appendChild(card);
     });
 }
 
 /**
- * Deletes a question from the state by ID.
+ * Deletes an uploaded image from the state by ID.
  */
-function deleteQuestion(id) {
-    questionsState = questionsState.filter(q => q.id !== id);
-    renderQuestionsGrid();
+function deleteUploadedImage(id) {
+    uploadedImages = uploadedImages.filter(img => img.id !== id);
+    renderUploadedImagesGrid();
     validateState();
 }
 
@@ -310,7 +312,7 @@ function validateState() {
     else if (document.getElementById('grid-3x4').checked) minRequired = 13;
     else if (document.getElementById('grid-4x4').checked) minRequired = 17;
     else if (document.getElementById('grid-5x5').checked) minRequired = 26;
-    const numUploaded = questionsState.length;
+    const numUploaded = uploadedImages.length;
     const numParticipants = parseInt(numParticipantsInput.value) || 25;
     const boardCells = activeGridRows * activeGridCols;
     
@@ -379,7 +381,7 @@ function generateBingo(shouldScroll = true) {
     const numParticipants = parseInt(numParticipantsInput.value) || 25;
     const gameTitle = gameTitleInput.value.trim() || 'בינגו ציורים';
     const boardCells = activeGridRows * activeGridCols;
-    const numUploaded = questionsState.length;
+    const numUploaded = uploadedImages.length;
     
     // Safety check: verify state is valid
     let minRequired = 10;
@@ -394,7 +396,7 @@ function generateBingo(shouldScroll = true) {
         // 1. Run balancing algorithm in JS
         const balanceResult = generateBalancedBoards(numParticipants, boardCells, numUploaded);
         
-        // 2. Map indices back to our question objects, and shuffle grid layout
+        // 2. Map indices back to our image objects, and shuffle grid layout
         const shuffledBoards = balanceResult.boards.map(boardIndices => {
             let boardList = [...boardIndices];
             shuffleArray(boardList);
@@ -408,13 +410,13 @@ function generateBingo(shouldScroll = true) {
             counts: balanceResult.counts,
             targets: balanceResult.targets,
             maxDeviation: balanceResult.maxDeviation,
-            questions: questionsState.map((q, idx) => {
-                // Update object with 0-indexed id matching position in questionsState
+            images: uploadedImages.map((imgObj, idx) => {
+                // Update object with 0-indexed id matching position in uploadedImages
                 return {
                     id: idx,
-                    text: q.text,
-                    image_data: q.image_data,
-                    aspectRatio: q.aspectRatio
+                    text: imgObj.text,
+                    image_data: imgObj.image_data,
+                    aspectRatio: imgObj.aspectRatio
                 };
             })
         };
@@ -477,21 +479,21 @@ function renderStatistics(gameData, shouldScroll = true) {
     // Fill Cards
     if (statPages) statPages.innerText = numPages;
     statBoards.innerText = gameData.boards.length;
-    if (statImages) statImages.innerText = gameData.questions.length;
+    if (statImages) statImages.innerText = gameData.images.length;
     statDeviation.innerText = gameData.maxDeviation === 0 ? 'מושלם (0)' : gameData.maxDeviation;
     
     const boardCells = activeGridRows * activeGridCols;
-    const avgShows = (gameData.boards.length * boardCells) / gameData.questions.length;
+    const avgShows = (gameData.boards.length * boardCells) / gameData.images.length;
     statAverage.innerText = avgShows.toFixed(1);
     
     // Group images by their actual appearance count
     const freqGroups = {};
-    gameData.questions.forEach((q, idx) => {
+    gameData.images.forEach((imgObj, idx) => {
         const count = gameData.counts[idx];
         if (!freqGroups[count]) {
             freqGroups[count] = [];
         }
-        freqGroups[count].push(q.text || q.image_name || `תמונה ${idx + 1}`);
+        freqGroups[count].push(imgObj.text || imgObj.image_name || `תמונה ${idx + 1}`);
     });
     
     // Populate frequency summary
@@ -620,10 +622,10 @@ function renderActivePagePreview() {
     pageGridEl.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
     pageGridEl.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
     
-    // Build lookup map for questions
-    const questionsMap = {};
-    gameData.questions.forEach(q => {
-        questionsMap[q.id] = q;
+    // Build lookup map for images
+    const imagesMap = {};
+    gameData.images.forEach(imgObj => {
+        imagesMap[imgObj.id] = imgObj;
     });
     
     // Scale parameters based on layout density (cards per page)
@@ -660,7 +662,7 @@ function renderActivePagePreview() {
             continue;
         }
         
-        const boardQuestions = gameData.boards[boardIdx];
+        const boardImages = gameData.boards[boardIdx];
         
         // Card wrapper
         const cardItem = document.createElement('div');
@@ -692,12 +694,12 @@ function renderActivePagePreview() {
                 cellEl.style.borderRight = `${gridBorderWidth} solid #94a3b8`;
                 cellEl.style.padding = cellPadding;
                 
-                const qIdx = boardQuestions[r * gridCols + c];
-                const q = questionsMap[qIdx];
+                const imgIdx = boardImages[r * gridCols + c];
+                const imgObj = imagesMap[imgIdx];
                 
                 const img = document.createElement('img');
-                img.src = q.image_data;
-                img.alt = q.text;
+                img.src = imgObj.image_data;
+                img.alt = imgObj.text;
                 
                 cellEl.appendChild(img);
                 rowEl.appendChild(cellEl);

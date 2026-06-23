@@ -13,7 +13,7 @@ function buildBingoPptx(gameData, gridRows, gridCols, cardsPerPage = 2) {
         try {
             const title = gameData.title;
             const boards = gameData.boards;
-            const questions = gameData.questions;
+            const images = gameData.images;
             
             // 1. Create a new presentation instance
             let pptx = new PptxGenJS();
@@ -133,7 +133,7 @@ function buildBingoPptx(gameData, gridRows, gridCols, cardsPerPage = 2) {
                     const cellHeight = gridHeight / gridRows;
                     
                     // E. Generate cells and place images
-                    const boardQuestions = boards[boardIdx];
+                    const boardImages = boards[boardIdx];
                     for (let r = 0; r < gridRows; r++) {
                         for (let c = 0; c < gridCols; c++) {
                             // Lay out columns from right-to-left for proper Hebrew direction alignment
@@ -149,8 +149,8 @@ function buildBingoPptx(gameData, gridRows, gridCols, cardsPerPage = 2) {
                             });
                             
                             // Get image data
-                            const qIdx = boardQuestions[r * gridCols + c];
-                            const q = questions[qIdx];
+                            const imgIdx = boardImages[r * gridCols + c];
+                            const imgObj = images[imgIdx];
                             
                             // Bounding box with 3% padding inside the cell
                             const paddingX = cellWidth * 0.03;
@@ -159,7 +159,7 @@ function buildBingoPptx(gameData, gridRows, gridCols, cardsPerPage = 2) {
                             const targetH = cellHeight - (2 * paddingY);
                             
                             // Fit image maintaining aspect ratio
-                            const aspect = q.aspectRatio || 1.0;
+                            const aspect = imgObj.aspectRatio || 1.0;
                             let w = targetW;
                             let h = targetW / aspect;
                             if (h > targetH) {
@@ -173,7 +173,7 @@ function buildBingoPptx(gameData, gridRows, gridCols, cardsPerPage = 2) {
                             
                             // Add image to slide
                             slide.addImage({
-                                data: q.image_data,
+                                data: imgObj.image_data,
                                 x: imgLeft, y: imgTop, w: w, h: h
                             });
                         }
