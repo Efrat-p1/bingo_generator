@@ -37,15 +37,9 @@ function generateBalancedBoards(numBoards, boardSize, numImages, maxRestarts = 1
     const N = numBoards;
     const M = numImages;
     
-    // Validate combination limit
+    // Calculate total unique combinations
     const totalCombinations = getCombinationsCount(M, K);
-    if (N > totalCombinations) {
-        throw new Error(
-            `לא ניתן לייצר ${N} לוחות ייחודיים ושונים עם ${M} תמונות בלבד. ` +
-            `המספר המקסימלי האפשרי של שילובים ייחודיים הוא ${totalCombinations}. ` +
-            `אנא העלו עוד תמונות או הפחיתו את מספר המשתתפים.`
-        );
-    }
+    const allowDuplicates = N > totalCombinations;
     
     for (let restart = 0; restart < maxRestarts; restart++) {
         const totalCells = N * K;
@@ -75,7 +69,7 @@ function generateBalancedBoards(numBoards, boardSize, numImages, maxRestarts = 1
                 let scores = [];
                 for (let j = 0; j < M; j++) {
                     let rem = capacities[j] - c[j];
-                    let noise = Math.random() * 0.5;
+                    let noise = Math.random() * (0.5 + retry * 0.5);
                     scores.push({ score: rem + noise, index: j });
                 }
                 
@@ -86,7 +80,10 @@ function generateBalancedBoards(numBoards, boardSize, numImages, maxRestarts = 1
                 let candidateBoard = scores.slice(0, K).map(x => x.index).sort((a, b) => a - b);
                 let boardKey = candidateBoard.join(',');
                 
-                if (!boardsSet.has(boardKey)) {
+                const forceUnique = !allowDuplicates || (boardsSet.size < totalCombinations && retry < maxRetries - 5);
+                const isUnique = !boardsSet.has(boardKey);
+                
+                if (isUnique || !forceUnique) {
                     boards.push(candidateBoard);
                     boardsSet.add(boardKey);
                     

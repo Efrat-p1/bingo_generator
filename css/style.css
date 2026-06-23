@@ -124,7 +124,7 @@ body {
     color: var(--text-secondary);
 }
 
-input[type="text"] {
+input[type="text"], textarea {
     background: rgba(15, 23, 42, 0.6);
     border: 1px solid var(--card-border);
     color: var(--text-primary);
@@ -135,10 +135,20 @@ input[type="text"] {
     transition: var(--transition-smooth);
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus, textarea:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+textarea#game-title {
+    resize: none;
+    overflow: hidden;
+    line-height: 1.4;
+    height: 4.4rem;
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
 }
 
 /* Grid Selector (Card Tabs) */
@@ -359,12 +369,11 @@ input[type="text"]:focus {
     text-align: center;
 }
 
-/* Question Cards Grid */
 .questions-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 15px;
-    max-height: 500px;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Reduced card size */
+    gap: 12px;
+    max-height: 300px; /* Reduced frame height, scrollable */
     overflow-y: auto;
     padding-left: 5px;
 }
@@ -466,8 +475,8 @@ input[type="text"]:focus {
     margin-top: 1rem;
 }
 
-.stats-panel.hidden {
-    display: none;
+.hidden {
+    display: none !important;
 }
 
 .stats-header {
@@ -476,7 +485,46 @@ input[type="text"]:focus {
     align-items: center;
     border-bottom: 2px solid rgba(99, 102, 241, 0.2);
     padding-bottom: 0.8rem;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
+
+.download-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.download-actions .format-selector {
+    display: flex;
+    gap: 6px;
+    grid-template-columns: none;
+}
+
+.download-actions .format-btn {
+    padding: 0 1.2rem;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.download-actions .btn-primary {
+    height: 42px;
+    margin: 0;
+    padding: 0 1.5rem;
+    font-size: 1.05rem;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+}
+
 
 .stats-header h2 {
     border-bottom: none;
@@ -572,3 +620,353 @@ input[type="text"]:focus {
         transform: scale(1);
     }
 }
+
+/* Format Selector Button Tabs */
+.format-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.format-selector input[type="radio"] {
+    display: none;
+}
+
+.format-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem;
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.format-selector input[type="radio"]:checked + .format-btn {
+    border-color: var(--primary-color);
+    background: rgba(99, 102, 241, 0.15);
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+}
+
+.format-btn:hover {
+    border-color: rgba(99, 102, 241, 0.5);
+    background: rgba(15, 23, 42, 0.6);
+}
+
+/* Board Preview CSS Styles */
+.preview-section {
+    margin: 2rem 0;
+}
+
+.preview-section h3 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.browser-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 1.5rem;
+    direction: rtl;
+}
+
+.board-counter {
+    font-size: 1.1rem;
+    font-weight: 600;
+    min-width: 140px;
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.browser-container {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.preview-card {
+    background: #FFFFFF;
+    color: #323232;
+    border: 1.5px solid #B4B4B4;
+    border-radius: 12px;
+    padding: 20px;
+    width: 420px; /* Larger width for great readability on desktop */
+    max-width: 95vw; /* Ensure responsiveness on mobile */
+    aspect-ratio: 1 / 1.414; /* A5 aspect ratio! */
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    box-sizing: border-box;
+}
+
+.preview-card-title {
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: bold;
+    font-family: 'Segoe UI', 'Rubik', sans-serif;
+    margin-bottom: 10px;
+    white-space: pre-line;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.preview-card-grid {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #787878;
+    border-left: 1px solid #787878;
+    box-sizing: border-box;
+    min-height: 0; /* Prevent overflow */
+}
+
+.preview-card-row {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    box-sizing: border-box;
+    min-height: 0; /* Prevent overflow */
+}
+
+.preview-card-cell {
+    border-bottom: 1px solid #787878;
+    border-right: 1px solid #787878;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3%; /* Reduced padding from 8% to fit larger images */
+    box-sizing: border-box;
+    overflow: hidden;
+    background: #FFFFFF;
+    min-width: 0; /* Prevent overflow */
+    min-height: 0; /* Prevent overflow */
+}
+
+.preview-card-cell img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* App Select Dropdown Input */
+select.app-select {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: var(--transition-smooth);
+    width: 100%;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: left 1rem center;
+    background-size: 1.2em;
+    padding-left: 2.5rem;
+}
+
+select.app-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+select.app-select option {
+    background: #1e293b;
+    color: var(--text-primary);
+}
+
+/* Upgraded Preview Layouts representing A4 pages */
+.preview-card.portrait {
+    width: 420px;
+    aspect-ratio: 1 / 1.414; /* A4 Portrait Ratio */
+}
+
+.preview-card.landscape {
+    width: 594px;
+    max-width: 95vw;
+    aspect-ratio: 1.414 / 1; /* A4 Landscape Ratio */
+}
+
+.preview-page-grid {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    gap: 8px;
+    box-sizing: border-box;
+    background: #f1f5f9;
+    padding: 8px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.preview-card-item {
+    background: #FFFFFF;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+}
+
+.preview-card-item .preview-card-title {
+    text-align: center;
+    font-weight: bold;
+    font-family: 'Segoe UI', 'Rubik', sans-serif;
+    color: #1e293b;
+    white-space: pre-line;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+    line-height: 1.3;
+}
+
+.preview-card-item .preview-card-grid {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #94a3b8;
+    border-left: 1px solid #94a3b8;
+    box-sizing: border-box;
+    min-height: 0;
+}
+
+.preview-card-item .preview-card-row {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    box-sizing: border-box;
+    min-height: 0;
+}
+
+.preview-card-item .preview-card-cell {
+    border-bottom: 1px solid #94a3b8;
+    border-right: 1px solid #94a3b8;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    overflow: hidden;
+    background: #FFFFFF;
+    min-width: 0;
+    min-height: 0;
+}
+
+.preview-card-item .preview-card-cell img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Footer & Feedback Widget */
+.app-footer {
+    max-width: 1200px;
+    margin: 3rem auto 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    border-top: 1px solid var(--card-border);
+    padding-top: 2.5rem;
+    padding-bottom: 2rem;
+    width: 100%;
+}
+
+.feedback-card {
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    background: rgba(30, 41, 59, 0.4);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 2rem;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.feedback-card h3 {
+    font-size: 1.3rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.feedback-card p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.stars-rating {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 0.5rem 0;
+    direction: ltr; /* Keep stars ordered left-to-right */
+}
+
+.star {
+    font-size: 2.2rem;
+    color: #475569;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.star:hover {
+    transform: scale(1.15);
+}
+
+.star.active {
+    color: #fbbf24; /* Yellow / Amber gold color */
+}
+
+.star:active {
+    transform: scale(0.95);
+}
+
+.feedback-status {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    font-weight: 500;
+}
+
+.feedback-status.success {
+    color: var(--accent-green);
+}
+
+.feedback-status.error {
+    color: var(--accent-red);
+}
+
+.copyright {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
