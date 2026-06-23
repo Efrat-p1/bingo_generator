@@ -17,7 +17,8 @@ function buildBingoPptx(gameData, gridRows, gridCols, cardsPerPage = 2) {
             
             // 1. Create a new presentation instance
             let pptx = new PptxGenJS();
-            pptx.rtlMode = true;
+            const isRtl = window.currentLanguage === 'he';
+            pptx.rtlMode = isRtl;
             
             // Determine orientation and slide layout sizes in inches
             let layoutName = 'A4_LANDSCAPE';
@@ -89,9 +90,9 @@ function buildBingoPptx(gameData, gridRows, gridCols, cardsPerPage = 2) {
                     const cIdx = i % cols;
                     const rIdx = Math.floor(i / cols);
                     
-                    // Lay out slides from right-to-left (first card on the right)
-                    const colIdxRTL = cols - 1 - cIdx;
-                    const offsetX = colIdxRTL * colWidth;
+                    // Lay out slides based on direction
+                    const activeColIdx = isRtl ? (cols - 1 - cIdx) : cIdx;
+                    const offsetX = activeColIdx * colWidth;
                     const offsetY = rIdx * rowHeight;
                     
                     const cardLeft = offsetX + margin;
@@ -106,18 +107,19 @@ function buildBingoPptx(gameData, gridRows, gridCols, cardsPerPage = 2) {
                         line: { color: 'B4B4B4', width: 1.5 }
                     });
                     
-                    // B. Draw Hebrew Title
+                    // B. Draw Hebrew/English Title
                     const titleLeft = cardLeft + margin;
                     const titleTop = cardTop + margin;
                     const titleWidth = cardWidth - (2 * margin);
                     
-                    slide.addText(`${title} - לוח ${boardIdx + 1}`, {
+                    const boardLabel = isRtl ? 'לוח' : 'Board';
+                    slide.addText(`${title} - ${boardLabel} ${boardIdx + 1}`, {
                         x: titleLeft, y: titleTop, w: titleWidth, h: titleHeight,
                         fontSize: titleFontSize,
                         bold: true,
                         color: '323232',
                         align: 'center',
-                        rtlMode: true,
+                        rtlMode: isRtl,
                         fontFace: 'Segoe UI',
                         fit: 'shrink'
                     });
@@ -136,9 +138,9 @@ function buildBingoPptx(gameData, gridRows, gridCols, cardsPerPage = 2) {
                     const boardImages = boards[boardIdx];
                     for (let r = 0; r < gridRows; r++) {
                         for (let c = 0; c < gridCols; c++) {
-                            // Lay out columns from right-to-left for proper Hebrew direction alignment
-                            const colIdxRTL = gridCols - 1 - c;
-                            const cellLeft = gridLeft + colIdxRTL * cellWidth;
+                            // Lay out columns based on direction for proper alignment
+                            const activeCellColIdx = isRtl ? (gridCols - 1 - c) : c;
+                            const cellLeft = gridLeft + activeCellColIdx * cellWidth;
                             const cellTop = gridTop + r * cellHeight;
                             
                             // Draw cell border

@@ -125,6 +125,8 @@ function buildBingoPdf(gameData, gridRows, gridCols, cardsPerPage = 2) {
                     cardEl.style.width = '100%';
                     
                     const cardContainer = document.createElement('div');
+                    const isRtl = window.currentLanguage === 'he';
+                    cardContainer.dir = isRtl ? 'rtl' : 'ltr';
                     cardContainer.style.width = '100%';
                     cardContainer.style.height = '100%';
                     cardContainer.style.border = '1.5pt solid #B4B4B4';
@@ -151,7 +153,8 @@ function buildBingoPdf(gameData, gridRows, gridCols, cardsPerPage = 2) {
                     titleEl.style.textOverflow = 'ellipsis';
                     titleEl.style.lineHeight = '1.3';
                     titleEl.style.marginBottom = titleMargin;
-                    titleEl.innerText = `${title} - לוח\u00A0${boardIdx + 1}`;
+                    const boardLabel = isRtl ? 'לוח' : 'Board';
+                    titleEl.innerText = `${title} - ${boardLabel}\u00A0${boardIdx + 1}`;
                     cardContainer.appendChild(titleEl);
                     
                     // Grid

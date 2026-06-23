@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎲 מחולל בינגו תמונות בעיצוב אישי 🎉</title>
+    <title data-i18n="docTitle">🎲 Custom Picture Bingo Generator 🎉</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Create custom, balanced picture bingo cards online for free! Upload your own photos, shuffle them, and download as PDF or PowerPoint for easy printing. Perfect for kids, classrooms, and parties.">
+    <meta name="keywords" content="picture bingo generator, custom bingo cards, free bingo maker, printable photo bingo, kid bingo generator, classroom bingo layout, animal bingo printable, family photo bingo">
     
     <!-- Google Fonts: Rubik (Hebrew) & Outfit (Latin/UI) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,15 +35,22 @@
 </head>
 <body>
     <div class="app-container">
+        <!-- Language Switcher -->
+        <div class="lang-switch-container">
+            <div class="lang-switch">
+                <button type="button" id="lang-en" class="lang-btn active">English</button>
+                <button type="button" id="lang-he" class="lang-btn">עברית</button>
+            </div>
+        </div>
         <!-- Header -->
         <header class="app-header">
             <div class="logo-area">
                 <span class="logo-icon">🎲</span>
-                <h1>מחולל בינגו תמונות בעיצוב אישי 🎉</h1>
+                <h1 data-i18n="appTitle">Custom Picture Bingo Generator 🎉</h1>
             </div>
-            <p>יוצרים לוחות בינגו ייחודיים ומאוזנים עם תמונות שאוהבים! הפעלה מושלמת לפעוטות וילדים (גם ללא צורך בקריאה). מעלים תמונות, מייצרים מצגת להדפסה, ומתחילים לשחק.</p>
+            <p data-i18n="appSubtitle">Create unique and balanced bingo boards with photos you love! Perfect for toddlers and kids (no reading required). Upload images, generate a printable layout, and start playing.</p>
             <p class="privacy-note" style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 5px;">
-                <span>🔒</span> <b>שומרים על הפרטיות שלכם:</b> כל עיבוד התמונות והאלגוריתמים מתבצעים על המחשב שלכם בלבד. התמונות שלכם לא נשמרות ולא מועלות לאף שרת!
+                <span>🔒</span> <b data-i18n="privacyNoteB">We value your privacy:</b> <span data-i18n="privacyNoteText">All image processing and algorithms run locally on your computer. Your photos are never saved or uploaded to any server!</span>
             </p>
         </header>
 
@@ -47,44 +58,44 @@
         <main class="app-workspace">
             <!-- Sidebar: Settings -->
             <section class="settings-panel card">
-                <h2>⚙️ הגדרות המשחק</h2>
+                <h2 data-i18n="settingsTitle">⚙️ Game Settings</h2>
                 
                 <div class="input-group">
-                    <label for="game-title">כותרת המשחק (עד 35 תווים)</label>
-                    <textarea id="game-title" placeholder="לדוגמה: בינגו חיות" maxlength="35" rows="2">בינגו ציורים</textarea>
+                    <label for="game-title" data-i18n="gameTitleLabel">Game Title (up to 35 chars)</label>
+                    <textarea id="game-title" data-i18n-placeholder="gameTitlePlaceholder" placeholder="e.g. Animal Bingo" maxlength="35" rows="2">Picture Bingo</textarea>
                 </div>
                 
                 <div class="input-group">
-                    <label>גודל לוח</label>
+                    <label data-i18n="boardSizeLabel">Board Size</label>
                     <div class="grid-selector">
                         <input type="radio" id="grid-3x3" name="grid-size" value="3x3" checked>
                         <label for="grid-3x3" class="selector-btn">
-                            <strong>3x3</strong>
-                            <span>9 תאים (לפחות 10 תמונות)</span>
+                            <strong data-i18n="grid3x3Title">3x3</strong>
+                            <span data-i18n="grid3x3Desc">9 cells (at least 10 images)</span>
                         </label>
                         
                         <input type="radio" id="grid-3x4" name="grid-size" value="3x4">
                         <label for="grid-3x4" class="selector-btn">
-                            <strong>3x4</strong>
-                            <span>12 תאים (לפחות 13 תמונות)</span>
+                            <strong data-i18n="grid3x4Title">3x4</strong>
+                            <span data-i18n="grid3x4Desc">12 cells (at least 13 images)</span>
                         </label>
 
                         <input type="radio" id="grid-4x4" name="grid-size" value="4x4">
                         <label for="grid-4x4" class="selector-btn">
-                            <strong>4x4</strong>
-                            <span>16 תאים (לפחות 17 תמונות)</span>
+                            <strong data-i18n="grid4x4Title">4x4</strong>
+                            <span data-i18n="grid4x4Desc">16 cells (at least 17 images)</span>
                         </label>
 
                         <input type="radio" id="grid-5x5" name="grid-size" value="5x5">
                         <label for="grid-5x5" class="selector-btn">
-                            <strong>5x5</strong>
-                            <span>25 תאים (לפחות 26 תמונות)</span>
+                            <strong data-i18n="grid5x5Title">5x5</strong>
+                            <span data-i18n="grid5x5Desc">25 cells (at least 26 images)</span>
                         </label>
                     </div>
                 </div>
                 
                 <div class="input-group">
-                    <label for="num-participants">מספר משתתפים (לוחות)</label>
+                    <label for="num-participants" data-i18n="numParticipantsLabel">Number of participants (boards)</label>
                     <div class="number-counter">
                         <button type="button" id="btn-dec" class="counter-btn">-</button>
                         <input type="number" id="num-participants" value="25" min="1" max="1000">
@@ -93,30 +104,30 @@
                 </div>
                 
                 <div class="input-group">
-                    <label for="cards-per-page">לוחות בדף להדפסה</label>
+                    <label for="cards-per-page" data-i18n="cardsPerPageLabel">Boards per page for printing</label>
                     <select id="cards-per-page" class="app-select">
-                        <option value="1">1 לוח בדף (לאורך)</option>
-                        <option value="2" selected>2 לוחות בדף (לרוחב - ברירת מחדל)</option>
-                        <option value="4">4 לוחות בדף (לאורך)</option>
-                        <option value="6">6 לוחות בדף (לרוחב)</option>
+                        <option value="1" data-i18n="cardsPerPage1">1 board per page (Portrait)</option>
+                        <option value="2" selected data-i18n="cardsPerPage2">2 boards per page (Landscape - Default)</option>
+                        <option value="4" data-i18n="cardsPerPage4">4 boards per page (Portrait)</option>
+                        <option value="6" data-i18n="cardsPerPage6">6 boards per page (Landscape)</option>
                     </select>
                 </div>
 
-                <button type="button" id="btn-generate" class="btn-primary" disabled>
-                    🎲 ערבב ועדכן לוחות
+                <button type="button" id="btn-generate" class="btn-primary" disabled data-i18n="btnGenerate">
+                    🎲 Shuffle & Update Boards
                 </button>
             </section>
 
             <!-- Main Content Area: Image Uploads -->
             <section class="upload-panel card">
-                <h2>📸 העלאת תמונות <span id="uploaded-count-badge" style="font-size: 0.9rem; background: rgba(99, 102, 241, 0.2); color: #818cf8; padding: 4px 12px; border-radius: 20px; margin-right: 10px; font-weight: 600; display: none; vertical-align: middle;">0 תמונות הועלו</span></h2>
+                <h2><span data-i18n="uploadPanelTitle">📸 Upload Images</span> <span id="uploaded-count-badge" style="font-size: 0.9rem; background: rgba(99, 102, 241, 0.2); color: #818cf8; padding: 4px 12px; border-radius: 20px; margin-inline-start: 10px; font-weight: 600; display: none; vertical-align: middle;">0 images uploaded</span></h2>
                 
                 <!-- Drag and Drop Zone -->
                 <div class="drag-drop-zone" id="drop-zone">
                     <div class="zone-content">
                         <span class="upload-icon">📤</span>
-                        <p>גררו והשליכו קבצי תמונה לכאן או <span>לחצו לבחירת קבצים</span></p>
-                        <span class="file-limits">קבצי PNG, JPG, JPEG, WEBP בלבד</span>
+                        <p data-i18n="dragDropText">Drag and drop image files here or <span>click to select files</span></p>
+                        <span class="file-limits" data-i18n="fileLimits">PNG, JPG, JPEG, WEBP files only</span>
                     </div>
                 </div>
                 <input type="file" id="file-input" multiple accept="image/*" class="file-input-hidden">
@@ -126,7 +137,7 @@
                     <div class="status-bar-container">
                         <div class="status-bar" id="status-bar" style="width: 0%;"></div>
                     </div>
-                    <p id="status-text">טרם הועלו תמונות. יש להעלות לפחות <span id="min-req-text">12</span> תמונות.</p>
+                    <p id="status-text" data-i18n="statusTextInitial">No images uploaded yet. Please upload at least <span id="min-req-text">10</span> images.</p>
                 </div>
                 
                 <!-- Images Cards Grid -->
@@ -139,7 +150,7 @@
         <!-- Output & Statistics Section (Hidden initially) -->
         <section class="stats-panel card hidden" id="stats-panel">
             <div class="stats-header">
-                 <h2>📊 נתוני איזון ותצוגה מקדימה</h2>
+                 <h2 data-i18n="statsTitleText">📊 Board Stats & Live Preview</h2>
                  <div class="download-actions">
                      <div class="format-selector">
                          <input type="radio" id="format-pptx" name="file-format" value="pptx" checked>
@@ -148,23 +159,23 @@
                          </label>
                          
                          <input type="radio" id="format-pdf" name="file-format" value="pdf">
-                         <label for="format-pdf" class="format-btn">
-                             מסמך PDF
+                         <label for="format-pdf" class="format-btn" data-i18n="formatPdfLabel">
+                             PDF Document
                          </label>
                      </div>
-                     <button type="button" class="btn-primary" id="btn-download-again">📥 הורד קובץ להדפסה</button>
+                     <button type="button" class="btn-primary" id="btn-download-again" data-i18n="btnDownload">📥 Download Printable File</button>
                  </div>
              </div>
             
-            <div id="download-warning" class="download-warning hidden" style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; padding: 10px 15px; margin-top: 15px; margin-bottom: 15px; color: #fbbf24; font-size: 0.95rem; line-height: 1.5; font-weight: 500; text-align: right; direction: rtl;"></div>
+            <div id="download-warning" class="download-warning hidden"></div>
             
-                         <!-- Board Preview Section -->
+             <!-- Board Preview Section -->
              <div class="preview-section" id="preview-section">
-                 <h3>👀 תצוגה מקדימה של לוחות הבינגו</h3>
+                 <h3 data-i18n="previewTitle">👀 Live Bingo Boards Preview</h3>
                  <div class="browser-controls">
-                     <button type="button" class="btn-secondary" id="btn-prev-board">◀️ הקודם</button>
-                     <span id="board-counter" class="board-counter">לוח 1 מתוך 25</span>
-                     <button type="button" class="btn-secondary" id="btn-next-board">הבא ▶️</button>
+                     <button type="button" class="btn-secondary" id="btn-prev-board" data-i18n="btnPrev">◀️ Previous</button>
+                     <span id="board-counter" class="board-counter">Page 1 of 1</span>
+                     <button type="button" class="btn-secondary" id="btn-next-board" data-i18n="btnNext">Next ▶️</button>
                  </div>
                  <div class="browser-container">
                      <div class="preview-card" id="active-preview-card">
@@ -176,34 +187,34 @@
             <div class="stats-cards" style="margin-top: 1.5rem; margin-bottom: 1.5rem;">
                 <div class="stat-card">
                     <span class="stat-val" id="stat-pages">0</span>
-                    <span class="stat-label">דפים שנוצרו</span>
+                    <span class="stat-label" data-i18n="statPagesLabel">Pages Generated</span>
                 </div>
                 <div class="stat-card">
                     <span class="stat-val" id="stat-boards">0</span>
-                    <span class="stat-label">לוחות שנוצרו</span>
+                    <span class="stat-label" data-i18n="statBoardsLabel">Boards Generated</span>
                 </div>
                 <div class="stat-card">
                     <span class="stat-val" id="stat-images">0</span>
-                    <span class="stat-label">תמונות הועלו</span>
+                    <span class="stat-label" data-i18n="statImagesLabel">Uploaded Images</span>
                 </div>
                 <div class="stat-card">
                     <span class="stat-val" id="stat-deviation">0</span>
-                    <span class="stat-label">סטיית איזון מקסימלית</span>
+                    <span class="stat-label" data-i18n="statDeviationLabel">Max Balance Deviation</span>
                 </div>
                 <div class="stat-card">
                     <span class="stat-val" id="stat-average">0</span>
-                    <span class="stat-label">ממוצע הופעות לתמונה</span>
+                    <span class="stat-label" data-i18n="statAverageLabel">Average Appearances</span>
                 </div>
             </div>
             
             <div class="stats-visuals">
                 <div class="table-container" style="max-height: none;">
-                    <h3 style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 0.5rem; margin-bottom: 0.8rem;">📊 סיכום הופעות תמונות</h3>
+                    <h3 style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 0.5rem; margin-bottom: 0.8rem;" data-i18n="statsFreqTitle">📊 Image Appearance Summary</h3>
                     <div id="stats-frequency-summary" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.5rem; line-height: 1.5;">
                         <!-- Grouped frequencies will go here -->
                     </div>
                     
-                    <h3 style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 0.5rem; margin-bottom: 0.8rem; margin-top: 1.5rem;">🔍 בדיקת ייחודיות לוחות (לוחות זהים)</h3>
+                    <h3 style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 0.5rem; margin-bottom: 0.8rem; margin-top: 1.5rem;" data-i18n="statsDupTitle">🔍 Board Uniqueness Analysis (Duplicate Boards)</h3>
                     <div id="stats-duplicates-summary" style="display: flex; flex-direction: column; gap: 6px; line-height: 1.5;">
                         <!-- Duplicate boards analysis will go here -->
                     </div>
@@ -211,11 +222,16 @@
             </div>
         </section>
         
+        <!-- SEO Content Block Panel -->
+        <section class="seo-content-panel card" id="seo-content-panel">
+            <!-- Dynamic SEO article loaded via JS based on current language -->
+        </section>
+        
         <!-- Footer & Feedback Section -->
         <footer class="app-footer">
             <div class="feedback-card card">
-                <h3>💬 נשמח לשמוע ממך!</h3>
-                <p>איך הייתה החוויה שלך בעיצוב לוחות הבינגו?</p>
+                <h3 data-i18n="feedbackTitle">💬 We'd love to hear from you!</h3>
+                <p data-i18n="feedbackSubtitle">How was your experience designing custom bingo boards?</p>
                 
                 <div class="stars-rating" id="stars-rating">
                     <span class="star" data-value="1">★</span>
@@ -226,14 +242,14 @@
                 </div>
                 
                 <div class="input-group" style="width: 100%; max-width: 450px; margin-top: 0.5rem; margin-bottom: 0.5rem;">
-                    <textarea id="feedback-comment" placeholder="הערות, רעיונות לשיפור או מילים טובות..." rows="2" style="width: 100%;"></textarea>
+                    <textarea id="feedback-comment" data-i18n-placeholder="feedbackPlaceholder" placeholder="Comments, suggestions, or kind words..." rows="2" style="width: 100%;"></textarea>
                 </div>
                 
-                <button type="button" id="btn-submit-feedback" class="btn-primary" style="margin-top: 0.5rem; width: auto; padding: 0.6rem 2.5rem; margin-left: auto; margin-right: auto; display: block;">שלח משוב</button>
+                <button type="button" id="btn-submit-feedback" class="btn-primary" style="margin-top: 0.5rem; width: auto; padding: 0.6rem 2.5rem; margin-left: auto; margin-right: auto; display: block;" data-i18n="btnSubmitFeedback">Submit Feedback</button>
                 <p id="feedback-status" class="feedback-status hidden"></p>
             </div>
             
-            <p class="copyright">מחולל לוחות בינגו תמונות לילדים © 2026 | גרסה v1.0.0</p>
+            <p class="copyright" data-i18n="copyright">Custom Picture Bingo Generator for Kids © 2026 | Version v1.0.1</p>
         </footer>
     </div>
 

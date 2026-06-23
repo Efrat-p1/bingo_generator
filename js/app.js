@@ -7,6 +7,8 @@ let lastGeneratedGameData = null;
 let activeGridRows = 3;
 let activeGridCols = 3;
 let activePreviewIndex = 0;
+let currentLanguage = 'en'; // default language
+window.currentLanguage = currentLanguage;
 
 // DOM Elements
 const gameTitleInput = document.getElementById('game-title');
@@ -33,6 +35,210 @@ const statAverage = document.getElementById('stat-average');
 const statsFrequencySummary = document.getElementById('stats-frequency-summary');
 const statsDuplicatesSummary = document.getElementById('stats-duplicates-summary');
 const uploadedCountBadge = document.getElementById('uploaded-count-badge');
+
+// Translation Dictionary
+const translations = {
+    en: {
+        docTitle: "🎲 Custom Picture Bingo Generator 🎉",
+        appTitle: "Custom Picture Bingo Generator 🎉",
+        appSubtitle: "Create unique and balanced bingo boards with photos you love! Perfect for toddlers and kids (no reading required). Upload images, generate a printable layout, and start playing.",
+        privacyNoteB: "We value your privacy:",
+        privacyNoteText: "All image processing and algorithms run locally on your computer. Your photos are never saved or uploaded to any server!",
+        settingsTitle: "⚙️ Game Settings",
+        gameTitleLabel: "Game Title (up to 35 chars)",
+        gameTitlePlaceholder: "e.g. Animal Bingo",
+        boardSizeLabel: "Board Size",
+        grid3x3Title: "3x3",
+        grid3x3Desc: "9 cells (at least 10 images)",
+        grid3x4Title: "3x4",
+        grid3x4Desc: "12 cells (at least 13 images)",
+        grid4x4Title: "4x4",
+        grid4x4Desc: "16 cells (at least 17 images)",
+        grid5x5Title: "5x5",
+        grid5x5Desc: "25 cells (at least 26 images)",
+        numParticipantsLabel: "Number of participants (boards)",
+        cardsPerPageLabel: "Boards per page for printing",
+        cardsPerPage1: "1 board per page (Portrait)",
+        cardsPerPage2: "2 boards per page (Landscape - Default)",
+        cardsPerPage4: "4 boards per page (Portrait)",
+        cardsPerPage6: "6 boards per page (Landscape)",
+        btnGenerate: "🎲 Shuffle & Update Boards",
+        uploadPanelTitle: "📸 Upload Images",
+        dragDropText: "Drag and drop image files here or <span>click to select files</span>",
+        fileLimits: "PNG, JPG, JPEG, WEBP files only",
+        statsTitleText: "📊 Board Stats & Live Preview",
+        formatPdfLabel: "PDF Document",
+        btnDownload: "📥 Download Printable File",
+        previewTitle: "👀 Live Bingo Boards Preview",
+        btnPrev: "◀️ Previous",
+        btnNext: "Next ▶️",
+        statPagesLabel: "Pages Generated",
+        statBoardsLabel: "Boards Generated",
+        statImagesLabel: "Uploaded Images",
+        statDeviationLabel: "Max Balance Deviation",
+        statAverageLabel: "Average Appearances",
+        statsFreqTitle: "📊 Image Appearance Summary",
+        statsDupTitle: "🔍 Board Uniqueness Analysis (Duplicate Boards)",
+        feedbackTitle: "💬 We'd love to hear from you!",
+        feedbackSubtitle: "How was your experience designing custom bingo boards?",
+        feedbackPlaceholder: "Comments, suggestions, or kind words...",
+        btnSubmitFeedback: "Submit Feedback",
+        copyright: "Custom Picture Bingo Generator for Kids © 2026 | Version v1.0.1"
+    },
+    he: {
+        docTitle: "🎲 מחולל לוחות בינגו תמונות בעיצוב אישי 🎉",
+        appTitle: "מחולל לוחות בינגו תמונות בעיצוב אישי 🎉",
+        appSubtitle: "עצבו לוחות בינגו ייחודיים ומאוזנים עם תמונות שלכם! מושלם לפעוטות וילדים (ללא צורך בקריאה). מעלים תמונות, מייצרים פריסה להדפסה ומתחילים לשחק.",
+        privacyNoteB: "אנו מעריכים את הפרטיות שלך:",
+        privacyNoteText: "כל עיבוד התמונות והאלגוריתמים רצים מקומית במחשב שלכם. התמונות שלכם אינן נשמרות ואינן מועלות לאף שרת חיצוני!",
+        settingsTitle: "⚙️ הגדרות המשחק",
+        gameTitleLabel: "כותרת המשחק (עד 35 תווים)",
+        gameTitlePlaceholder: "למשל: בינגו חיות לגן",
+        boardSizeLabel: "גודל לוח",
+        grid3x3Title: "3x3",
+        grid3x3Desc: "9 תאים (לפחות 10 תמונות)",
+        grid3x4Title: "3x4",
+        grid3x4Desc: "12 תאים (לפחות 13 תמונות)",
+        grid4x4Title: "4x4",
+        grid4x4Desc: "16 תאים (לפחות 17 תמונות)",
+        grid5x5Title: "5x5",
+        grid5x5Desc: "25 תאים (לפחות 26 תמונות)",
+        numParticipantsLabel: "מספר משתתפים (לוחות)",
+        cardsPerPageLabel: "לוחות בדף להדפסה",
+        cardsPerPage1: "לוח 1 בדף (לאורך)",
+        cardsPerPage2: "2 לוחות בדף (לרוחב - ברירת מחדל)",
+        cardsPerPage4: "4 לוחות בדף (לאורך)",
+        cardsPerPage6: "6 לוחות בדף (לרוחב)",
+        btnGenerate: "🎲 ערבב ועדכן לוחות",
+        uploadPanelTitle: "📸 העלאת תמונות",
+        dragDropText: "גררו קבצי תמונות לכאן או <span>לחצו לבחירת קבצים</span>",
+        fileLimits: "קבצי PNG, JPG, JPEG, WEBP בלבד",
+        statsTitleText: "📊 נתוני איזון ותצוגה מקדימה",
+        formatPdfLabel: "מסמך PDF",
+        btnDownload: "📥 הורד קובץ להדפסה",
+        previewTitle: "👀 תצוגה מקדימה של לוחות הבינגו",
+        btnPrev: "◀️ הקודם",
+        btnNext: "הבא ▶️",
+        statPagesLabel: "דפים שנוצרו",
+        statBoardsLabel: "לוחות שנוצרו",
+        statImagesLabel: "תמונות הועלו",
+        statDeviationLabel: "סטיית איזון מקסימלית",
+        statAverageLabel: "ממוצע הופעות לתמונה",
+        statsFreqTitle: "📊 סיכום הופעות תמונות",
+        statsDupTitle: "🔍 בדיקת ייחודיות לוחות (לוחות זהים)",
+        feedbackTitle: "💬 נשמח לשמוע ממך!",
+        feedbackSubtitle: "איך הייתה החוויה שלך בעיצוב לוחות הבינגו?",
+        feedbackPlaceholder: "הערות, רעיונות לשיפור או מילים טובות...",
+        btnSubmitFeedback: "שלח משוב",
+        copyright: "מחולל לוחות בינגו תמונות לילדים © 2026 | גרסה v1.0.1"
+    }
+};
+
+// Update page content based on language
+function setLanguage(lang) {
+    currentLanguage = lang;
+    window.currentLanguage = lang;
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+    localStorage.setItem('bingo_generator_lang', lang);
+    
+    // Toggle active classes on language buttons
+    const btnEn = document.getElementById('lang-en');
+    const btnHe = document.getElementById('lang-he');
+    if (lang === 'he') {
+        btnHe.classList.add('active');
+        btnEn.classList.remove('active');
+    } else {
+        btnEn.classList.add('active');
+        btnHe.classList.remove('active');
+    }
+    
+    // Set document title
+    document.title = translations[lang].docTitle;
+    
+    // Translate all static texts
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+            if (key === 'dragDropText' || key === 'privacyNoteText') {
+                el.innerHTML = translations[lang][key];
+            } else {
+                el.innerText = translations[lang][key];
+            }
+        }
+    });
+    
+    // Translate placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (translations[lang] && translations[lang][key]) {
+            el.setAttribute('placeholder', translations[lang][key]);
+        }
+    });
+    
+    // Check and set default game title value if user has not customized it yet
+    if (gameTitleInput) {
+        if ((gameTitleInput.value === 'Picture Bingo' || gameTitleInput.value === '') && lang === 'he') {
+            gameTitleInput.value = 'בינגו ציורים';
+        } else if ((gameTitleInput.value === 'בינגו ציורים' || gameTitleInput.value === '') && lang === 'en') {
+            gameTitleInput.value = 'Picture Bingo';
+        }
+    }
+    
+    // Re-validate state which translates dynamic components like status text, stats summary and warning messages
+    validateState();
+    
+    // Update placeholders of image inputs that are loaded dynamically
+    document.querySelectorAll('.image-input').forEach(input => {
+        input.setAttribute('placeholder', lang === 'he' ? 'שם/תיאור התמונה' : 'Image description');
+    });
+    
+    // Load dynamic SEO article content
+    renderSeoContent();
+}
+
+// Renders the dynamic SEO articles based on chosen language
+function renderSeoContent() {
+    const seoPanel = document.getElementById('seo-content-panel');
+    if (!seoPanel) return;
+    
+    if (currentLanguage === 'he') {
+        seoPanel.innerHTML = `
+            <h3>🎨 יצירת לוחות בינגו תמונות מנצחים!</h3>
+            <p>הכנת לוחות בינגו ציורים להדפסה היא דרך נפלאה להעסיק פעוטות, ילדי גן ותלמידים בכיתות הנמוכות. מכיוון שלא נדרש ידע בקריאה, כל הילדים יכולים להשתתף וליהנות מחוויה חינוכית ומעשירה! השתמשו במחולל החינמי שלנו ליצירת בינגו חיות לגן, למידת מילים חדשות, הפעלות לימי הולדת או משחק משפחתי בעיצוב אישי.</p>
+            <h4>💡 טיפים מובילים לאיזון ואיכות משחק מושלמת</h4>
+            <ul>
+                <li><b>השתמשו במספיק תמונות:</b> העלאת כמות תמונות הגדולה ממספר התאים בלוח (למשל, 15-20 תמונות ללוח 3x3) מבטיחה שכל הלוחות שיופקו יהיו ייחודיים ומגוונים.</li>
+                <li><b>שמרו על פשטות:</b> בחרו בתמונות עם רקע נקי וברור. ילדים קטנים מזהים חפצים וחיות במהירות רבה יותר כשיש פחות רעש ויזואלי סביבם.</li>
+                <li><b>חיסכון בזיכרון:</b> המערכת שלנו מקטינה ומכווצת את התמונות ל-400 פיקסלים בתוך הדפדפן, ובכך חוסכת בזיכרון המחשב ושומרת על ביצועים מהירים מבלי לפגוע באיכות ההדפסה.</li>
+            </ul>
+            <h4>🎲 רעיונות יצירתיים למשחק בינגו תמונות</h4>
+            <ul>
+                <li><b>הרחבת אוצר מילים:</b> המנחה קורא בשם החפץ (או משמיע את קולו של בעל החיים), והילדים מזהים ומכסים את הציור המתאים בלוח שלהם.</li>
+                <li><b>לימוד שפות זרות:</b> קראו את שם המילה בשפה שרוצים ללמוד (למשל אנגלית או עברית) כדי לתרגל אוצר מילים בצורה חווייתית וכיפית.</li>
+                <li><b>משחק הגדרות וזיכרון:</b> תארו את החפץ (למשל, "זה פרי צהוב שקופים מאוד אוהבים לאכול") במקום לומר את שמו ישירות, ואפשרו לילדים לנחש את המילה ולמצוא אותה בלוח.</li>
+            </ul>
+        `;
+    } else {
+        seoPanel.innerHTML = `
+            <h3>🎨 Master the Art of Custom Picture Bingo!</h3>
+            <p>Creating your own printable picture bingo cards is the perfect way to engage toddlers, preschoolers, and classroom students. Since no reading is required, kids of all ages can join in on the educational fun! Use our free generator for animal bingo, vocabulary building, birthday parties, or custom family games.</p>
+            <h4>💡 Top Tips for Perfect Bingo Game Balance</h4>
+            <ul>
+                <li><b>Use Enough Images:</b> Uploading more images than the board cells (e.g. 15-20 images for a 3x3 board) ensures that every board is unique and exciting.</li>
+                <li><b>Keep it Clean:</b> Use simple, bright photos with clear backgrounds. Toddlers recognize objects faster when there is less visual noise.</li>
+                <li><b>Save Memory:</b> Our system automatically compresses images to 400px in the browser, keeping the file size small while maintaining crisp printing quality.</li>
+            </ul>
+            <h4>🎲 Fun Ways to Play Picture Bingo</h4>
+            <ul>
+                <li><b>Vocabulary Builder:</b> Call out the name of the object (or make its sound) and have children identify and cover the picture on their board.</li>
+                <li><b>Foreign Language Learning:</b> Call out the vocabulary word in a target language (e.g., Spanish, Hebrew, or English) to practice translation in a play-based setting.</li>
+                <li><b>Memory Recall:</b> Describe the item (e.g., "It's yellow and monkeys love to eat it") instead of saying the name directly, forcing kids to guess the word first.</li>
+            </ul>
+        `;
+    }
+}
+
 
 // Initialize Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
@@ -168,6 +374,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Interactive feedback form stars and submit handlers
     initFeedbackForm();
+    
+    // Language Switcher Listeners
+    document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
+    document.getElementById('lang-he').addEventListener('click', () => setLanguage('he'));
+    
+    // Load saved language or default to English
+    const savedLang = localStorage.getItem('bingo_generator_lang') || 'en';
+    setLanguage(savedLang);
 });
 
 /**
@@ -219,7 +433,9 @@ async function processFiles(files) {
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
         if (!file.type.startsWith('image/')) {
-            errors.push(`הקובץ "${file.name}" אינו קובץ תמונה תקין.`);
+            errors.push(currentLanguage === 'he'
+                ? `הקובץ "${file.name}" אינו קובץ תמונה תקין.`
+                : `The file "${file.name}" is not a valid image.`);
             continue;
         }
         
@@ -240,7 +456,9 @@ async function processFiles(files) {
             });
             
         } catch (err) {
-            errors.push(`כשל בעיבוד התמונה "${file.name}": ${err.message}`);
+            errors.push(currentLanguage === 'he'
+                ? `כשל בעיבוד התמונה "${file.name}": ${err.message}`
+                : `Failed to process image "${file.name}": ${err.message}`);
         }
     }
     
@@ -263,13 +481,16 @@ function renderUploadedImagesGrid() {
         const card = document.createElement('div');
         card.className = 'image-card';
         
+        const altText = currentLanguage === 'he' ? 'תמונה ללוח' : 'Board image';
+        const placeholderText = currentLanguage === 'he' ? 'שם/תיאור התמונה' : 'Image description';
+        
         card.innerHTML = `
             <div class="image-wrap">
-                <img src="${imgObj.image_data}" alt="תמונה ללוח">
+                <img src="${imgObj.image_data}" alt="${altText}">
             </div>
             <div class="image-card-footer">
                 <input type="text" class="image-input" value="${imgObj.text}" 
-                       placeholder="שם/תיאור התמונה" data-id="${imgObj.id}">
+                       placeholder="${placeholderText}" data-id="${imgObj.id}">
                 <button type="button" class="btn-delete" data-id="${imgObj.id}">🗑️</button>
             </div>
         `;
@@ -319,7 +540,9 @@ function validateState() {
     // Update the uploaded count badge in the header of the upload panel
     if (uploadedCountBadge) {
         if (numUploaded > 0) {
-            uploadedCountBadge.innerText = `${numUploaded} תמונות הועלו`;
+            uploadedCountBadge.innerText = currentLanguage === 'he'
+                ? `${numUploaded} תמונות הועלו`
+                : `${numUploaded} images uploaded`;
             uploadedCountBadge.style.display = 'inline-block';
         } else {
             uploadedCountBadge.style.display = 'none';
@@ -332,7 +555,9 @@ function validateState() {
     
     if (numUploaded < minRequired) {
         statusBar.style.background = 'var(--accent-red)';
-        statusText.innerHTML = `הועלו <b>${numUploaded}</b> תמונות מתוך <b>${minRequired}</b> נדרשות לפחות. חסרות <b>${minRequired - numUploaded}</b> תמונות.`;
+        statusText.innerHTML = currentLanguage === 'he'
+            ? `הועלו <b>${numUploaded}</b> תמונות מתוך <b>${minRequired}</b> נדרשות לפחות. חסרות <b>${minRequired - numUploaded}</b> תמונות.`
+            : `Uploaded <b>${numUploaded}</b> out of at least <b>${minRequired}</b> required images. Missing <b>${minRequired - numUploaded}</b> images.`;
         btnGenerate.disabled = true;
         statsPanel.classList.add('hidden');
         lastGeneratedGameData = null;
@@ -344,26 +569,49 @@ function validateState() {
     statusBar.style.background = 'var(--accent-green)';
     const totalCombinations = getCombinationsCount(numUploaded, boardCells);
     
-    let statusMsg = `✅ הועלו <b>${numUploaded}</b> תמונות בהצלחה! על מנת שלא תהיה חזרתיות של שילובי תמונות, רצוי לייצר עד <b>${totalCombinations.toLocaleString()}</b> לוחות.`;
-    if (numParticipants > totalCombinations) {
-        statusMsg += ` במצב זה, כיוון שביקשת לייצר <b>${numParticipants.toLocaleString()}</b> לוחות, ייווצרו כפילויות (באפשרותך להחליט בסוף אם להדפיסם).`;
+    let statusMsg = "";
+    if (currentLanguage === 'he') {
+        statusMsg = `✅ הועלו <b>${numUploaded}</b> תמונות בהצלחה! על מנת שלא תהיה חזרתיות של שילובי תמונות, רצוי לייצר עד <b>${totalCombinations.toLocaleString()}</b> לוחות.`;
+        if (numParticipants > totalCombinations) {
+            statusMsg += ` במצב זה, כיוון שביקשת לייצר <b>${numParticipants.toLocaleString()}</b> לוחות, ייווצרו כפילויות (באפשרותך להחליט בסוף אם להדפיסם).`;
+        } else {
+            statusMsg += ` כיוון שביקשת לייצר <b>${numParticipants.toLocaleString()}</b> לוחות, כל הלוחות שייווצרו יהיו ייחודיים ומאוזנים.`;
+        }
+        
+        statusMsg += `
+        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px; line-height: 1.4; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
+            💡 <b>כיצד מחושב מספר הלוחות השונים ללא חזרתיות?</b> לפי נוסחת הקומבינטוריקה לצירופים (Combinations):
+            <div style="display: flex; align-items: center; justify-content: center; gap: 6px; direction: ltr; margin: 6px auto; background: rgba(15, 23, 42, 0.4); padding: 6px 12px; border-radius: 6px; width: fit-content; border: 1px solid var(--card-border);">
+                <span style="font-weight: 600;">C(n, k) = </span>
+                <div style="display: inline-flex; flex-direction: column; align-items: center; line-height: 1.1;">
+                    <span style="border-bottom: 1px solid var(--text-secondary); padding-bottom: 2px; font-weight: 600;">n!</span>
+                    <span style="padding-top: 2px; font-size: 0.8rem;">k! · (n - k)!</span>
+                </div>
+            </div>
+            כאשר <b>n</b> הוא מספר התמונות שהעלית (<b>${numUploaded}</b>) ו-<b>k</b> הוא מספר התאים בלוח (<b>${boardCells}</b>).
+        </div>`;
     } else {
-        statusMsg += ` כיוון שביקשת לייצר <b>${numParticipants.toLocaleString()}</b> לוחות, כל הלוחות שייווצרו יהיו ייחודיים ומאוזנים.`;
+        statusMsg = `✅ Uploaded <b>${numUploaded}</b> images successfully! To avoid duplicate board combinations, we recommend generating up to <b>${totalCombinations.toLocaleString()}</b> boards.`;
+        if (numParticipants > totalCombinations) {
+            statusMsg += ` Since you requested to generate <b>${numParticipants.toLocaleString()}</b> boards, some duplicate boards will occur (you can choose whether to print them at the end).`;
+        } else {
+            statusMsg += ` Since you requested to generate <b>${numParticipants.toLocaleString()}</b> boards, all boards generated will be unique and balanced.`;
+        }
+        
+        statusMsg += `
+        <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px; line-height: 1.4; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
+            💡 <b>How is the maximum number of unique boards calculated?</b> Using the combinatorics formula for combinations:
+            <div style="display: flex; align-items: center; justify-content: center; gap: 6px; direction: ltr; margin: 6px auto; background: rgba(15, 23, 42, 0.4); padding: 6px 12px; border-radius: 6px; width: fit-content; border: 1px solid var(--card-border);">
+                <span style="font-weight: 600;">C(n, k) = </span>
+                <div style="display: inline-flex; flex-direction: column; align-items: center; line-height: 1.1;">
+                    <span style="border-bottom: 1px solid var(--text-secondary); padding-bottom: 2px; font-weight: 600;">n!</span>
+                    <span style="padding-top: 2px; font-size: 0.8rem;">k! · (n - k)!</span>
+                </div>
+            </div>
+            Where <b>n</b> is the total number of uploaded images (<b>${numUploaded}</b>) and <b>k</b> is the number of cells on each board (<b>${boardCells}</b>).
+        </div>`;
     }
     
-    // Add combinatorics formula explanation
-    statusMsg += `
-    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px; line-height: 1.4; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
-        💡 <b>כיצד מחושב מספר הלוחות השונים ללא חזרתיות?</b> לפי נוסחת הקומבינטוריקה לצירופים (Combinations):
-        <div style="display: flex; align-items: center; justify-content: center; gap: 6px; direction: ltr; margin: 6px auto; background: rgba(15, 23, 42, 0.4); padding: 6px 12px; border-radius: 6px; width: fit-content; border: 1px solid var(--card-border);">
-            <span style="font-weight: 600;">C(n, k) = </span>
-            <div style="display: inline-flex; flex-direction: column; align-items: center; line-height: 1.1;">
-                <span style="border-bottom: 1px solid var(--text-secondary); padding-bottom: 2px; font-weight: 600;">n!</span>
-                <span style="padding-top: 2px; font-size: 0.8rem;">k! · (n - k)!</span>
-            </div>
-        </div>
-        כאשר <b>n</b> הוא מספר התמונות שהעלית (<b>${numUploaded}</b>) ו-<b>k</b> הוא מספר התאים בלוח (<b>${boardCells}</b>).
-    </div>`;
     statusText.innerHTML = statusMsg;
     btnGenerate.disabled = false;
     
@@ -430,10 +678,13 @@ function generateBingo(shouldScroll = true) {
         renderStatistics(lastGeneratedGameData, shouldScroll);
         
     } catch (error) {
+        const errorMsg = currentLanguage === 'he'
+            ? `שגיאה בייצור לוחות הבינגו: ${error.message}`
+            : `Error generating bingo boards: ${error.message}`;
         if (shouldScroll) {
-            alert(`שגיאה בייצור לוחות הבינגו: ${error.message}`);
+            alert(errorMsg);
         } else {
-            console.error(`שגיאה בייצור לוחות בינגו: ${error.message}`);
+            console.error(errorMsg);
         }
     }
 }
@@ -449,7 +700,11 @@ function downloadBingoFile() {
     
     btnDownloadAgain.disabled = true;
     const originalText = btnDownloadAgain.innerText;
-    btnDownloadAgain.innerText = isPPTX ? '⌛ מייצר מצגת PowerPoint...' : '⌛ מייצר מסמך PDF...';
+    if (isPPTX) {
+        btnDownloadAgain.innerText = currentLanguage === 'he' ? '⌛ מייצר מצגת PowerPoint...' : '⌛ Generating PowerPoint presentation...';
+    } else {
+        btnDownloadAgain.innerText = currentLanguage === 'he' ? '⌛ מייצר מסמך PDF...' : '⌛ Generating PDF document...';
+    }
     
     const generatorPromise = isPPTX 
         ? buildBingoPptx(lastGeneratedGameData, activeGridRows, activeGridCols, cardsPerPage)
@@ -463,7 +718,9 @@ function downloadBingoFile() {
         .catch(err => {
             btnDownloadAgain.disabled = false;
             btnDownloadAgain.innerText = originalText;
-            alert(`כשל ביצירת קובץ: ${err.message}`);
+            alert(currentLanguage === 'he'
+                ? `כשל ביצירת קובץ: ${err.message}`
+                : `File generation failed: ${err.message}`);
         });
 }
 
@@ -480,7 +737,12 @@ function renderStatistics(gameData, shouldScroll = true) {
     if (statPages) statPages.innerText = numPages;
     statBoards.innerText = gameData.boards.length;
     if (statImages) statImages.innerText = gameData.images.length;
-    statDeviation.innerText = gameData.maxDeviation === 0 ? 'מושלם (0)' : gameData.maxDeviation;
+    
+    if (statDeviation) {
+        statDeviation.innerText = gameData.maxDeviation === 0 
+            ? (currentLanguage === 'he' ? 'מושלם (0)' : 'Perfect (0)') 
+            : gameData.maxDeviation;
+    }
     
     const boardCells = activeGridRows * activeGridCols;
     const avgShows = (gameData.boards.length * boardCells) / gameData.images.length;
@@ -503,7 +765,11 @@ function renderStatistics(gameData, shouldScroll = true) {
         const imageList = freqGroups[freq].join(', ');
         const rowEl = document.createElement('div');
         rowEl.style.fontSize = '0.95rem';
-        rowEl.innerHTML = `• מופיע <b>${freq}</b> פעמים: <span style="color: var(--text-secondary);">${imageList}</span>`;
+        if (currentLanguage === 'he') {
+            rowEl.innerHTML = `• מופיע <b>${freq}</b> פעמים: <span style="color: var(--text-secondary);">${imageList}</span>`;
+        } else {
+            rowEl.innerHTML = `• Appears <b>${freq}</b> times: <span style="color: var(--text-secondary);">${imageList}</span>`;
+        }
         statsFrequencySummary.appendChild(rowEl);
     });
     
@@ -529,28 +795,47 @@ function renderStatistics(gameData, shouldScroll = true) {
     // Populate duplicates summary
     statsDuplicatesSummary.innerHTML = '';
     if (duplicateGroups.length > 0) {
-        const countText = duplicateGroups.length === 1 
-            ? 'נמצא לוח כפול אחד (המכיל את אותן התמונות בדיוק בסדר שונה או זהה).' 
-            : `נמצאו <b>${duplicateGroups.length}</b> קבוצות של לוחות זהים (המכילים את אותן התמונות בדיוק בסדר שונה או זהה).`;
+        let countText = "";
+        let subText = "";
+        let groupPrefix = "";
+        let boardPrefix = "";
+        
+        if (currentLanguage === 'he') {
+            countText = duplicateGroups.length === 1 
+                ? 'נמצא לוח כפול אחד (המכיל את אותן התמונות בדיוק בסדר שונה או זהה).' 
+                : `נמצאו <b>${duplicateGroups.length}</b> קבוצות של לוחות זהים (המכילים את אותן התמונות בדיוק בסדר שונה או זהה).`;
+            subText = 'באפשרותך להחליט האם להדפיס לוחות אלו או לא.';
+            groupPrefix = 'קבוצה';
+            boardPrefix = 'לוח';
+        } else {
+            countText = duplicateGroups.length === 1 
+                ? 'Found one duplicate board combination (containing the exact same set of images in a different or same order).' 
+                : `Found <b>${duplicateGroups.length}</b> groups of duplicate boards (containing the exact same set of images in a different or same order).`;
+            subText = 'You can choose whether to print these boards or not.';
+            groupPrefix = 'Group';
+            boardPrefix = 'Board';
+        }
             
         const textEl = document.createElement('p');
         textEl.style.color = 'var(--accent-red)';
         textEl.style.fontWeight = 'bold';
         textEl.style.marginBottom = '6px';
-        textEl.innerHTML = `⚠️ ${countText}<br><span style="font-weight: normal; color: var(--text-secondary); font-size: 0.9rem;">באפשרותך להחליט האם להדפיס לוחות אלו או לא.</span>`;
+        textEl.innerHTML = `⚠️ ${countText}<br><span style="font-weight: normal; color: var(--text-secondary); font-size: 0.9rem;">${subText}</span>`;
         statsDuplicatesSummary.appendChild(textEl);
         
         duplicateGroups.forEach((group, gIdx) => {
             const groupEl = document.createElement('div');
             groupEl.style.fontSize = '0.95rem';
-            groupEl.innerHTML = `• <b>קבוצה ${gIdx + 1}:</b> לוח ${group.join(', לוח ')}`;
+            groupEl.innerHTML = `• <b>${groupPrefix} ${gIdx + 1}:</b> ${boardPrefix} ${group.join(`, ${boardPrefix} `)}`;
             statsDuplicatesSummary.appendChild(groupEl);
         });
     } else {
         const textEl = document.createElement('p');
         textEl.style.color = 'var(--accent-green)';
         textEl.style.fontWeight = 'bold';
-        textEl.innerHTML = `✅ מעולה! כל הלוחות ייחודיים לחלוטין (אין שני לוחות המכילים את אותן התמונות בדיוק).`;
+        textEl.innerHTML = currentLanguage === 'he'
+            ? `✅ מעולה! כל הלוחות ייחודיים לחלוטין (אין שני לוחות המכילים את אותן התמונות בדיוק).`
+            : `✅ Excellent! All boards are completely unique (no two boards contain the exact same set of images).`;
         statsDuplicatesSummary.appendChild(textEl);
     }
     
@@ -588,7 +873,9 @@ function renderActivePagePreview() {
     
     // Update board counter text to show page numbers
     const boardCounter = document.getElementById('board-counter');
-    boardCounter.innerText = `עמוד ${activePreviewIndex + 1} מתוך ${numPages}`;
+    boardCounter.innerText = currentLanguage === 'he'
+        ? `עמוד ${activePreviewIndex + 1} מתוך ${numPages}`
+        : `Page ${activePreviewIndex + 1} of ${numPages}`;
     
     // Enable/disable buttons
     const btnPrev = document.getElementById('btn-prev-board');
@@ -674,7 +961,8 @@ function renderActivePagePreview() {
         titleEl.className = 'preview-card-title';
         titleEl.style.fontSize = titleFontSize;
         titleEl.style.marginBottom = titleMargin;
-        titleEl.innerText = `${gameData.title} - לוח\u00A0${boardIdx + 1}`;
+        const boardLabel = currentLanguage === 'he' ? 'לוח' : 'Board';
+        titleEl.innerText = `${gameData.title} - ${boardLabel}\u00A0${boardIdx + 1}`;
         cardItem.appendChild(titleEl);
         
         // Grid container
@@ -777,13 +1065,15 @@ function initFeedbackForm() {
     if (btnSubmitFeedback) {
         btnSubmitFeedback.addEventListener('click', () => {
             if (selectedRating === 0) {
-                feedbackStatus.innerText = "⚠️ אנא בחרו דירוג בכוכבים (1 עד 5).";
+                feedbackStatus.innerText = currentLanguage === 'he'
+                    ? "⚠️ אנא בחרו דירוג בכוכבים (1 עד 5)."
+                    : "⚠️ Please select a star rating (1 to 5).";
                 feedbackStatus.className = "feedback-status error";
                 feedbackStatus.classList.remove('hidden');
                 return;
             }
             
-            feedbackStatus.innerText = "⌛ שולח משוב...";
+            feedbackStatus.innerText = currentLanguage === 'he' ? "⌛ שולח משוב..." : "⌛ Submitting feedback...";
             feedbackStatus.className = "feedback-status";
             feedbackStatus.classList.remove('hidden');
             btnSubmitFeedback.disabled = true;
@@ -811,7 +1101,11 @@ function initFeedbackForm() {
                 localStorage.setItem('bingo_local_feedbacks', JSON.stringify(localFeedbacks));
                 
                 setTimeout(() => {
-                    feedbackStatus.innerHTML = `❤️ תודה! המשוב נשמר מקומית בדפדפן (כיוון שטרם הוגדר קישור ל-Google Sheets).<br><span style="font-size: 0.8rem; color: var(--text-secondary);">בדקו את ה-Console או ה-LocalStorage כדי לראות את הנתונים.</span>`;
+                    if (currentLanguage === 'he') {
+                        feedbackStatus.innerHTML = `❤️ תודה! המשוב נשמר מקומית בדפדפן (כיוון שטרם הוגדר קישור ל-Google Sheets).<br><span style="font-size: 0.8rem; color: var(--text-secondary);">בדקו את ה-Console או ה-LocalStorage כדי לראות את הנתונים.</span>`;
+                    } else {
+                        feedbackStatus.innerHTML = `❤️ Thank you! Your feedback was saved locally in the browser (as no Google Sheets integration is configured).<br><span style="font-size: 0.8rem; color: var(--text-secondary);">Check the Console or LocalStorage to view the data.</span>`;
+                    }
                     feedbackStatus.className = "feedback-status success";
                     console.log("Local feedbacks stored:", localFeedbacks);
                     
@@ -834,7 +1128,9 @@ function initFeedbackForm() {
                 body: JSON.stringify(feedbackData)
             })
             .then(() => {
-                feedbackStatus.innerText = "❤️ המשוב שלך נשלח בהצלחה ונשמר בגיליון Google Sheets! תודה רבה.";
+                feedbackStatus.innerText = currentLanguage === 'he'
+                    ? "❤️ המשוב שלך נשלח בהצלחה ונשמר בגיליון Google Sheets! תודה רבה."
+                    : "❤️ Your feedback was successfully submitted and saved in your Google Sheet!";
                 feedbackStatus.className = "feedback-status success";
                 
                 // Reset form
@@ -844,7 +1140,9 @@ function initFeedbackForm() {
                 btnSubmitFeedback.disabled = false;
             })
             .catch(err => {
-                feedbackStatus.innerText = `⚠️ כשל בשליחת המשוב: ${err.message || err}`;
+                feedbackStatus.innerText = currentLanguage === 'he'
+                    ? `⚠️ כשל בשליחת המשוב: ${err.message || err}`
+                    : `⚠️ Failed to submit feedback: ${err.message || err}`;
                 feedbackStatus.className = "feedback-status error";
                 btnSubmitFeedback.disabled = false;
             });
