@@ -156,7 +156,7 @@ function setLanguage(lang) {
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
     localStorage.setItem('bingo_generator_lang', lang);
-    
+
     // Toggle active classes on language buttons
     const btnEn = document.getElementById('lang-en');
     const btnHe = document.getElementById('lang-he');
@@ -167,10 +167,10 @@ function setLanguage(lang) {
         btnEn.classList.add('active');
         btnHe.classList.remove('active');
     }
-    
+
     // Set document title
     document.title = translations[lang].docTitle;
-    
+
     // Translate all static texts
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
@@ -182,7 +182,7 @@ function setLanguage(lang) {
             }
         }
     });
-    
+
     // Translate placeholders
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
         const key = el.getAttribute('data-i18n-placeholder');
@@ -190,7 +190,7 @@ function setLanguage(lang) {
             el.setAttribute('placeholder', translations[lang][key]);
         }
     });
-    
+
     // Check and set default game title value if user has not customized it yet
     if (gameTitleInput) {
         if ((gameTitleInput.value === 'Picture Bingo' || gameTitleInput.value === '') && lang === 'he') {
@@ -199,15 +199,15 @@ function setLanguage(lang) {
             gameTitleInput.value = 'Picture Bingo';
         }
     }
-    
+
     // Re-validate state which translates dynamic components like status text, stats summary and warning messages
     validateState();
-    
+
     // Update placeholders of image inputs that are loaded dynamically
     document.querySelectorAll('.image-input').forEach(input => {
         input.setAttribute('placeholder', lang === 'he' ? 'שם/תיאור התמונה' : 'Image description');
     });
-    
+
     // Load dynamic SEO article content
     renderSeoContent();
 }
@@ -216,7 +216,7 @@ function setLanguage(lang) {
 function renderSeoContent() {
     const seoPanel = document.getElementById('seo-content-panel');
     if (!seoPanel) return;
-    
+
     if (currentLanguage === 'he') {
         seoPanel.innerHTML = `
             <h3>🎨 יצירת לוחות בינגו תמונות מנצחים!</h3>
@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
             validateState();
         }
     });
-    
+
     btnInc.addEventListener('click', () => {
         let val = parseInt(numParticipantsInput.value) || 25;
         if (val < 1000) {
@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Drag & Drop Event Listeners
     dropZone.addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', handleFileSelect);
-    
+
     dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
         dropZone.classList.add('dragging');
@@ -335,10 +335,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Generate Button Event Listener
     btnGenerate.addEventListener('click', () => generateBingo(true));
     btnDownloadAgain.addEventListener('click', downloadBingoFile);
-    
+
     // Live update title in browser preview and enforce 2-line maximum constraint
     let lastValidTitle = gameTitleInput.value;
-    
+
     gameTitleInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             const newlines = (gameTitleInput.value.match(/\n/g) || []).length;
@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-    
+
     gameTitleInput.addEventListener('input', () => {
         const originalValue = gameTitleInput.value;
         const newlines = (originalValue.match(/\n/g) || []).length;
@@ -359,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Temporarily append the longest possible suffix " - לוח 1000" to test height constraint
         gameTitleInput.value = originalValue + " - לוח 1000";
         const exceeds = (gameTitleInput.scrollHeight - gameTitleInput.clientHeight > 5);
-        
+
         // Restore original value
         gameTitleInput.value = originalValue;
 
@@ -368,14 +368,14 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             lastValidTitle = originalValue;
         }
-        
+
         const gameTitle = gameTitleInput.value.trim() || 'בינגו ציורים';
         if (lastGeneratedGameData) {
             lastGeneratedGameData.title = gameTitle;
             renderActivePagePreview();
         }
     });
-    
+
     // Board Browser Navigation Event Listeners
     document.getElementById('btn-prev-board').addEventListener('click', () => {
         if (activePreviewIndex > 0) {
@@ -383,7 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderActivePagePreview();
         }
     });
-    
+
     document.getElementById('btn-next-board').addEventListener('click', () => {
         if (lastGeneratedGameData) {
             const cardsPerPage = parseInt(document.getElementById('cards-per-page').value) || 2;
@@ -394,14 +394,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-    
+
     // Interactive feedback form stars and submit handlers
     initFeedbackForm();
-    
+
     // Language Switcher Listeners
     document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
     document.getElementById('lang-he').addEventListener('click', () => setLanguage('he'));
-    
+
     // Load saved language or default to English
     const savedLang = localStorage.getItem('bingo_generator_lang') || 'en';
     setLanguage(savedLang);
@@ -449,10 +449,10 @@ function handleFileSelect(e) {
  */
 async function processFiles(files) {
     let errors = [];
-    
+
     // Disable generate button during load
     btnGenerate.disabled = true;
-    
+
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
         if (!file.type.startsWith('image/')) {
@@ -461,14 +461,14 @@ async function processFiles(files) {
                 : `The file "${file.name}" is not a valid image.`);
             continue;
         }
-        
+
         try {
             // Process image via canvas helper (returns { dataUrl, aspectRatio })
             const result = await processImageFile(file);
-            
+
             // Extract clean name without extension
             const defaultText = file.name.split('.').slice(0, -1).join('.');
-            
+
             // Add image to state
             uploadedImages.push({
                 id: Date.now() + Math.random(), // Unique ID
@@ -477,18 +477,18 @@ async function processFiles(files) {
                 aspectRatio: result.aspectRatio,
                 image_name: file.name
             });
-            
+
         } catch (err) {
             errors.push(currentLanguage === 'he'
                 ? `כשל בעיבוד התמונה "${file.name}": ${err.message}`
                 : `Failed to process image "${file.name}": ${err.message}`);
         }
     }
-    
+
     if (errors.length > 0) {
         alert(errors.join('\n'));
     }
-    
+
     // Re-render and validate state
     renderUploadedImagesGrid();
     validateState();
@@ -499,14 +499,14 @@ async function processFiles(files) {
  */
 function renderUploadedImagesGrid() {
     imagesGrid.innerHTML = '';
-    
+
     uploadedImages.forEach((imgObj) => {
         const card = document.createElement('div');
         card.className = 'image-card';
-        
+
         const altText = currentLanguage === 'he' ? 'תמונה ללוח' : 'Board image';
         const placeholderText = currentLanguage === 'he' ? 'שם/תיאור התמונה' : 'Image description';
-        
+
         card.innerHTML = `
             <div class="image-wrap">
                 <img src="${imgObj.image_data}" alt="${altText}">
@@ -517,7 +517,7 @@ function renderUploadedImagesGrid() {
                 <button type="button" class="btn-delete" data-id="${imgObj.id}">🗑️</button>
             </div>
         `;
-        
+
         // Listen to changes in image text input
         const input = card.querySelector('.image-input');
         input.addEventListener('change', (e) => {
@@ -527,13 +527,13 @@ function renderUploadedImagesGrid() {
                 uploadedImages[index].text = e.target.value;
             }
         });
-        
+
         // Listen to delete click
         const delBtn = card.querySelector('.btn-delete');
         delBtn.addEventListener('click', () => {
             deleteUploadedImage(imgObj.id);
         });
-        
+
         imagesGrid.appendChild(card);
     });
 }
@@ -587,15 +587,15 @@ async function translateToEnglish(text) {
 async function handleUnsplashSearch() {
     let query = unsplashQuery.value.trim();
     if (!query) return;
-    
+
     // Check if API key is configured
-    const apiKey = typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_UNSPLASH_API_KEY 
-        ? import.meta.env.VITE_UNSPLASH_API_KEY 
+    const apiKey = typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_UNSPLASH_API_KEY
+        ? import.meta.env.VITE_UNSPLASH_API_KEY
         : null;
-        
+
     if (!apiKey || apiKey === 'your_unsplash_access_key_here') {
-        alert(currentLanguage === 'he' 
-            ? 'חסר מפתח API של Unsplash בקובץ .env.local' 
+        alert(currentLanguage === 'he'
+            ? 'חסר מפתח API של Unsplash בקובץ .env.local'
             : 'Unsplash API key is missing in .env.local file');
         return;
     }
@@ -611,18 +611,18 @@ async function handleUnsplashSearch() {
         let messageHtml = '';
         let originalQuery = query;
         let spellingCorrected = false;
-        
+
         // 1. Detect if it's Hebrew
         const isHebrew = /[\u0590-\u05FF]/.test(query);
         const lang = isHebrew ? 'he' : 'en';
-        
+
         // 2. Spellcheck
         const suggestion = await checkSpelling(query, lang);
         if (suggestion) {
             finalQuery = suggestion;
             spellingCorrected = true;
         }
-        
+
         // 3. Translate if Hebrew
         let translatedText = '';
         if (isHebrew) {
@@ -632,7 +632,7 @@ async function handleUnsplashSearch() {
                 finalQuery = englishTranslation; // Unsplash needs English
             }
         }
-        
+
         // 4. Construct transparent message
         if (currentLanguage === 'he') {
             messageHtml += `מחפש ב-Unsplash עבור: <b>${finalQuery}</b><br>`;
@@ -651,7 +651,7 @@ async function handleUnsplashSearch() {
                 messageHtml += `<span style="opacity: 0.8; font-size: 0.8rem;">(Translated from Hebrew)</span>`;
             }
         }
-        
+
         // Show message
         unsplashMessage.innerHTML = messageHtml;
         unsplashMessage.style.display = 'block';
@@ -660,10 +660,10 @@ async function handleUnsplashSearch() {
         if (!response.ok) {
             throw new Error(`API Error: ${response.status} ${response.statusText}`);
         }
-        
+
         const data = await response.json();
         const photos = data.results || [];
-        
+
         if (photos.length === 0) {
             unsplashLoading.innerText = currentLanguage === 'he' ? 'לא נמצאו תמונות.' : 'No images found.';
             setTimeout(() => { unsplashLoading.style.display = 'none'; }, 3000);
@@ -672,7 +672,7 @@ async function handleUnsplashSearch() {
 
         unsplashLoading.style.display = 'none';
         unsplashResults.style.display = 'grid';
-        
+
         photos.forEach(photo => {
             const imgWrap = document.createElement('div');
             imgWrap.style.cursor = 'pointer';
@@ -681,7 +681,7 @@ async function handleUnsplashSearch() {
             imgWrap.style.borderRadius = '6px';
             imgWrap.style.border = '2px solid transparent';
             imgWrap.style.transition = 'border-color 0.2s';
-            
+
             const img = document.createElement('img');
             img.src = photo.urls.small;
             img.alt = photo.alt_description || query;
@@ -689,9 +689,9 @@ async function handleUnsplashSearch() {
             img.style.height = '100px';
             img.style.objectFit = 'cover';
             img.style.display = 'block';
-            
+
             imgWrap.appendChild(img);
-            
+
             // On click, download the image and add it
             imgWrap.addEventListener('click', async () => {
                 imgWrap.style.opacity = '0.5';
@@ -702,7 +702,7 @@ async function handleUnsplashSearch() {
                     const fileName = (photo.alt_description || query).replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.jpg';
                     const file = new File([blob], fileName, { type: blob.type });
                     await processFiles([file]);
-                    
+
                     // Show a tiny success indicator
                     imgWrap.style.borderColor = 'var(--accent-green)';
                 } catch (err) {
@@ -711,10 +711,10 @@ async function handleUnsplashSearch() {
                     imgWrap.style.opacity = '1';
                 }
             });
-            
+
             unsplashResults.appendChild(imgWrap);
         });
-        
+
     } catch (err) {
         unsplashLoading.innerText = currentLanguage === 'he' ? `שגיאה: ${err.message}` : `Error: ${err.message}`;
     } finally {
@@ -734,7 +734,7 @@ function validateState() {
     const numUploaded = uploadedImages.length;
     const numParticipants = parseInt(numParticipantsInput.value) || 25;
     const boardCells = activeGridRows * activeGridCols;
-    
+
     // Update the uploaded count badge in the header of the upload panel
     if (uploadedCountBadge) {
         if (numUploaded > 0) {
@@ -746,11 +746,11 @@ function validateState() {
             uploadedCountBadge.style.display = 'none';
         }
     }
-    
+
     // Calculate progress percentage
     const progressPercent = Math.min((numUploaded / minRequired) * 100, 100);
     statusBar.style.width = `${progressPercent}%`;
-    
+
     if (numUploaded < minRequired) {
         statusBar.style.background = 'var(--accent-red)';
         statusText.innerHTML = currentLanguage === 'he'
@@ -762,11 +762,11 @@ function validateState() {
         updateDownloadWarning();
         return;
     }
-    
+
     // Success state
     statusBar.style.background = 'var(--accent-green)';
     const totalCombinations = getCombinationsCount(numUploaded, boardCells);
-    
+
     let statusMsg = "";
     if (currentLanguage === 'he') {
         statusMsg = `✅ הועלו <b>${numUploaded}</b> תמונות בהצלחה! על מנת שלא תהיה חזרתיות של שילובי תמונות, רצוי לייצר עד <b>${totalCombinations.toLocaleString()}</b> לוחות.`;
@@ -775,7 +775,7 @@ function validateState() {
         } else {
             statusMsg += ` כיוון שביקשת לייצר <b>${numParticipants.toLocaleString()}</b> לוחות, כל הלוחות שייווצרו יהיו ייחודיים ומאוזנים.`;
         }
-        
+
         statusMsg += `
         <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px; line-height: 1.4; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
             💡 <b>כיצד מחושב מספר הלוחות השונים ללא חזרתיות?</b> לפי נוסחת הקומבינטוריקה לצירופים (Combinations):
@@ -795,7 +795,7 @@ function validateState() {
         } else {
             statusMsg += ` Since you requested to generate <b>${numParticipants.toLocaleString()}</b> boards, all boards generated will be unique and balanced.`;
         }
-        
+
         statusMsg += `
         <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px; line-height: 1.4; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
             💡 <b>How is the maximum number of unique boards calculated?</b> Using the combinatorics formula for combinations:
@@ -809,13 +809,13 @@ function validateState() {
             Where <b>n</b> is the total number of uploaded images (<b>${numUploaded}</b>) and <b>k</b> is the number of cells on each board (<b>${boardCells}</b>).
         </div>`;
     }
-    
+
     statusText.innerHTML = statusMsg;
     btnGenerate.disabled = false;
-    
+
     // Update download warning dynamically
     updateDownloadWarning();
-    
+
     // Automatically generate boards for preview (without scrolling)
     generateBingo(false);
 }
@@ -828,27 +828,27 @@ function generateBingo(shouldScroll = true) {
     const gameTitle = gameTitleInput.value.trim() || 'בינגו ציורים';
     const boardCells = activeGridRows * activeGridCols;
     const numUploaded = uploadedImages.length;
-    
+
     // Safety check: verify state is valid
     let minRequired = 10;
     if (document.getElementById('grid-3x3').checked) minRequired = 10;
     else if (document.getElementById('grid-3x4').checked) minRequired = 13;
     else if (document.getElementById('grid-4x4').checked) minRequired = 17;
     else if (document.getElementById('grid-5x5').checked) minRequired = 26;
-    
+
     if (numUploaded < minRequired) return;
-    
+
     try {
         // 1. Run balancing algorithm in JS
         const balanceResult = generateBalancedBoards(numParticipants, boardCells, numUploaded);
-        
+
         // 2. Map indices back to our image objects, and shuffle grid layout
         const shuffledBoards = balanceResult.boards.map(boardIndices => {
             let boardList = [...boardIndices];
             shuffleArray(boardList);
             return boardList;
         });
-        
+
         // 3. Compile game data
         lastGeneratedGameData = {
             title: gameTitle,
@@ -866,15 +866,15 @@ function generateBingo(shouldScroll = true) {
                 };
             })
         };
-        
+
         // 4. Set active preview index to show the first board
         if (activePreviewIndex >= lastGeneratedGameData.boards.length) {
             activePreviewIndex = 0;
         }
-        
+
         // 5. Render Statistics Panel (which calls the browser preview)
         renderStatistics(lastGeneratedGameData, shouldScroll);
-        
+
     } catch (error) {
         const errorMsg = currentLanguage === 'he'
             ? `שגיאה בייצור לוחות הבינגו: ${error.message}`
@@ -892,10 +892,10 @@ function generateBingo(shouldScroll = true) {
  */
 function downloadBingoFile() {
     if (!lastGeneratedGameData) return;
-    
+
     const isPPTX = document.getElementById('format-pptx').checked;
     const cardsPerPage = parseInt(document.getElementById('cards-per-page').value) || 2;
-    
+
     btnDownloadAgain.disabled = true;
     const originalText = btnDownloadAgain.innerText;
     if (isPPTX) {
@@ -903,11 +903,11 @@ function downloadBingoFile() {
     } else {
         btnDownloadAgain.innerText = currentLanguage === 'he' ? '⌛ מייצר מסמך PDF...' : '⌛ Generating PDF document...';
     }
-    
-    const generatorPromise = isPPTX 
+
+    const generatorPromise = isPPTX
         ? buildBingoPptx(lastGeneratedGameData, activeGridRows, activeGridCols, cardsPerPage)
         : buildBingoPdf(lastGeneratedGameData, activeGridRows, activeGridCols, cardsPerPage);
-        
+
     generatorPromise
         .then(() => {
             btnDownloadAgain.disabled = false;
@@ -927,25 +927,25 @@ function downloadBingoFile() {
  */
 function renderStatistics(gameData, shouldScroll = true) {
     statsPanel.classList.remove('hidden');
-    
+
     const cardsPerPage = parseInt(document.getElementById('cards-per-page').value) || 2;
     const numPages = Math.ceil(gameData.boards.length / cardsPerPage);
-    
+
     // Fill Cards
     if (statPages) statPages.innerText = numPages;
     statBoards.innerText = gameData.boards.length;
     if (statImages) statImages.innerText = gameData.images.length;
-    
+
     if (statDeviation) {
-        statDeviation.innerText = gameData.maxDeviation === 0 
-            ? (currentLanguage === 'he' ? 'מושלם (0)' : 'Perfect (0)') 
+        statDeviation.innerText = gameData.maxDeviation === 0
+            ? (currentLanguage === 'he' ? 'מושלם (0)' : 'Perfect (0)')
             : gameData.maxDeviation;
     }
-    
+
     const boardCells = activeGridRows * activeGridCols;
     const avgShows = (gameData.boards.length * boardCells) / gameData.images.length;
     statAverage.innerText = avgShows.toFixed(1);
-    
+
     // Group images by their actual appearance count
     const freqGroups = {};
     gameData.images.forEach((imgObj, idx) => {
@@ -955,7 +955,7 @@ function renderStatistics(gameData, shouldScroll = true) {
         }
         freqGroups[count].push(imgObj.text || imgObj.image_name || `תמונה ${idx + 1}`);
     });
-    
+
     // Populate frequency summary
     statsFrequencySummary.innerHTML = '';
     const sortedFrequencies = Object.keys(freqGroups).map(Number).sort((a, b) => b - a);
@@ -970,7 +970,7 @@ function renderStatistics(gameData, shouldScroll = true) {
         }
         statsFrequencySummary.appendChild(rowEl);
     });
-    
+
     // Find duplicate boards (independent of layout order)
     const boardKeyToIndices = {}; // map of sorted_indices_string -> array of board indices (1-based)
     gameData.boards.forEach((board, bIdx) => {
@@ -980,7 +980,7 @@ function renderStatistics(gameData, shouldScroll = true) {
         }
         boardKeyToIndices[sortedKey].push(bIdx + 1); // 1-based board index
     });
-    
+
     // Filter out keys that have only 1 board (meaning they are unique)
     const duplicateGroups = [];
     Object.keys(boardKeyToIndices).forEach(key => {
@@ -989,7 +989,7 @@ function renderStatistics(gameData, shouldScroll = true) {
             duplicateGroups.push(boardsList);
         }
     });
-    
+
     // Populate duplicates summary
     statsDuplicatesSummary.innerHTML = '';
     if (duplicateGroups.length > 0) {
@@ -997,30 +997,30 @@ function renderStatistics(gameData, shouldScroll = true) {
         let subText = "";
         let groupPrefix = "";
         let boardPrefix = "";
-        
+
         if (currentLanguage === 'he') {
-            countText = duplicateGroups.length === 1 
-                ? 'נמצא לוח כפול אחד (המכיל את אותן התמונות בדיוק בסדר שונה או זהה).' 
+            countText = duplicateGroups.length === 1
+                ? 'נמצא לוח כפול אחד (המכיל את אותן התמונות בדיוק בסדר שונה או זהה).'
                 : `נמצאו <b>${duplicateGroups.length}</b> קבוצות של לוחות זהים (המכילים את אותן התמונות בדיוק בסדר שונה או זהה).`;
             subText = 'באפשרותך להחליט האם להדפיס לוחות אלו או לא.';
             groupPrefix = 'קבוצה';
             boardPrefix = 'לוח';
         } else {
-            countText = duplicateGroups.length === 1 
-                ? 'Found one duplicate board combination (containing the exact same set of images in a different or same order).' 
+            countText = duplicateGroups.length === 1
+                ? 'Found one duplicate board combination (containing the exact same set of images in a different or same order).'
                 : `Found <b>${duplicateGroups.length}</b> groups of duplicate boards (containing the exact same set of images in a different or same order).`;
             subText = 'You can choose whether to print these boards or not.';
             groupPrefix = 'Group';
             boardPrefix = 'Board';
         }
-            
+
         const textEl = document.createElement('p');
         textEl.style.color = 'var(--accent-red)';
         textEl.style.fontWeight = 'bold';
         textEl.style.marginBottom = '6px';
         textEl.innerHTML = `⚠️ ${countText}<br><span style="font-weight: normal; color: var(--text-secondary); font-size: 0.9rem;">${subText}</span>`;
         statsDuplicatesSummary.appendChild(textEl);
-        
+
         duplicateGroups.forEach((group, gIdx) => {
             const groupEl = document.createElement('div');
             groupEl.style.fontSize = '0.95rem';
@@ -1036,10 +1036,10 @@ function renderStatistics(gameData, shouldScroll = true) {
             : `✅ Excellent! All boards are completely unique (no two boards contain the exact same set of images).`;
         statsDuplicatesSummary.appendChild(textEl);
     }
-    
+
     // Render the active preview board card
     renderActivePagePreview();
-    
+
     // Smooth scroll down to statistics
     if (shouldScroll) {
         statsPanel.scrollIntoView({ behavior: 'smooth' });
@@ -1052,40 +1052,40 @@ function renderStatistics(gameData, shouldScroll = true) {
  */
 function renderActivePagePreview() {
     if (!lastGeneratedGameData) return;
-    
+
     const gameData = lastGeneratedGameData;
     const gridRows = activeGridRows;
     const gridCols = activeGridCols;
     const pageIdx = activePreviewIndex;
-    
+
     const cardsPerPageSelect = document.getElementById('cards-per-page');
     const cardsPerPage = parseInt(cardsPerPageSelect.value) || 2;
-    
+
     const numBoards = gameData.boards.length;
     const numPages = Math.ceil(numBoards / cardsPerPage);
-    
+
     // Bounds check
     if (activePreviewIndex >= numPages) {
         activePreviewIndex = 0;
     }
-    
+
     // Update board counter text to show page numbers
     const boardCounter = document.getElementById('board-counter');
     boardCounter.innerText = currentLanguage === 'he'
         ? `עמוד ${activePreviewIndex + 1} מתוך ${numPages}`
         : `Page ${activePreviewIndex + 1} of ${numPages}`;
-    
+
     // Enable/disable buttons
     const btnPrev = document.getElementById('btn-prev-board');
     const btnNext = document.getElementById('btn-next-board');
-    
+
     btnPrev.disabled = activePreviewIndex === 0;
     btnNext.disabled = activePreviewIndex >= numPages - 1;
-    
+
     // Render the page container inside active-preview-card
     const activePreviewCard = document.getElementById('active-preview-card');
     activePreviewCard.innerHTML = '';
-    
+
     // Clean classes and assign dynamic portrait/landscape classes
     activePreviewCard.className = 'preview-card';
     if (cardsPerPage === 1 || cardsPerPage === 4) {
@@ -1093,33 +1093,33 @@ function renderActivePagePreview() {
     } else {
         activePreviewCard.classList.add('landscape');
     }
-    
+
     // Create the page grid element
     const pageGridEl = document.createElement('div');
     pageGridEl.className = 'preview-page-grid';
-    
+
     // Set grid columns/rows dynamically
     let cols = 1, rows = 1;
     if (cardsPerPage === 2) { cols = 2; rows = 1; }
     else if (cardsPerPage === 4) { cols = 2; rows = 2; }
     else if (cardsPerPage === 6) { cols = 3; rows = 2; }
-    
+
     pageGridEl.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
     pageGridEl.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-    
+
     // Build lookup map for images
     const imagesMap = {};
     gameData.images.forEach(imgObj => {
         imagesMap[imgObj.id] = imgObj;
     });
-    
+
     // Scale parameters based on layout density (cards per page)
     let titleFontSize = '1.3rem';
     let cardPadding = '15px';
     let titleMargin = '10px';
     let gridBorderWidth = '1.5px';
     let cellPadding = '3%';
-    
+
     if (cardsPerPage === 2) {
         titleFontSize = '0.95rem';
         cardPadding = '10px';
@@ -1135,7 +1135,7 @@ function renderActivePagePreview() {
         titleMargin = '3px';
         gridBorderWidth = '1px';
     }
-    
+
     // Render the cards on the page
     for (let i = 0; i < cardsPerPage; i++) {
         const boardIdx = pageIdx * cardsPerPage + i;
@@ -1146,14 +1146,14 @@ function renderActivePagePreview() {
             pageGridEl.appendChild(emptyCell);
             continue;
         }
-        
+
         const boardImages = gameData.boards[boardIdx];
-        
+
         // Card wrapper
         const cardItem = document.createElement('div');
         cardItem.className = 'preview-card-item';
         cardItem.style.padding = cardPadding;
-        
+
         // Title
         const titleEl = document.createElement('div');
         titleEl.className = 'preview-card-title';
@@ -1162,41 +1162,41 @@ function renderActivePagePreview() {
         const boardLabel = currentLanguage === 'he' ? 'לוח' : 'Board';
         titleEl.innerText = `${gameData.title} - ${boardLabel}\u00A0${boardIdx + 1}`;
         cardItem.appendChild(titleEl);
-        
+
         // Grid container
         const gridEl = document.createElement('div');
         gridEl.className = 'preview-card-grid';
         gridEl.style.borderTop = `${gridBorderWidth} solid #94a3b8`;
         gridEl.style.borderLeft = `${gridBorderWidth} solid #94a3b8`;
-        
+
         for (let r = 0; r < gridRows; r++) {
             const rowEl = document.createElement('div');
             rowEl.className = 'preview-card-row';
-            
+
             for (let c = 0; c < gridCols; c++) {
                 const cellEl = document.createElement('div');
                 cellEl.className = 'preview-card-cell';
                 cellEl.style.borderBottom = `${gridBorderWidth} solid #94a3b8`;
                 cellEl.style.borderRight = `${gridBorderWidth} solid #94a3b8`;
                 cellEl.style.padding = cellPadding;
-                
+
                 const imgIdx = boardImages[r * gridCols + c];
                 const imgObj = imagesMap[imgIdx];
-                
+
                 const img = document.createElement('img');
                 img.src = imgObj.image_data;
                 img.alt = imgObj.text;
-                
+
                 cellEl.appendChild(img);
                 rowEl.appendChild(cellEl);
             }
             gridEl.appendChild(rowEl);
         }
-        
+
         cardItem.appendChild(gridEl);
         pageGridEl.appendChild(cardItem);
     }
-    
+
     activePreviewCard.appendChild(pageGridEl);
 }
 
@@ -1208,9 +1208,9 @@ function updateDownloadWarning() {
     const isPDF = document.getElementById('format-pdf').checked;
     const warningEl = document.getElementById('download-warning');
     const isStatsPanelVisible = statsPanel && !statsPanel.classList.contains('hidden');
-    
+
     if (!warningEl) return;
-    
+
     if (isStatsPanelVisible && numParticipants > 150 && isPDF) {
         warningEl.innerText = '⚠️ שים לב: הפקת כמות גדולה של לוחות (מעל 150) בפורמט PDF עלולה לקחת זמן מה ולהכביד על הדפדפן. מומלץ להשתמש בפורמט PowerPoint (PPTX) למהירות מרבית.';
         warningEl.classList.remove('hidden');
@@ -1228,26 +1228,26 @@ function initFeedbackForm() {
     const btnSubmitFeedback = document.getElementById('btn-submit-feedback');
     const feedbackComment = document.getElementById('feedback-comment');
     const feedbackStatus = document.getElementById('feedback-status');
-    
+
     let selectedRating = 0;
-    
+
     // Set up star rating interactions
     stars.forEach(star => {
         star.addEventListener('click', (e) => {
             selectedRating = parseInt(e.target.dataset.value);
             updateStars(selectedRating);
         });
-        
+
         star.addEventListener('mouseover', (e) => {
             const hoverValue = parseInt(e.target.dataset.value);
             updateStars(hoverValue);
         });
-        
+
         star.addEventListener('mouseleave', () => {
             updateStars(selectedRating);
         });
     });
-    
+
     function updateStars(rating) {
         stars.forEach(star => {
             const val = parseInt(star.dataset.value);
@@ -1258,7 +1258,7 @@ function initFeedbackForm() {
             }
         });
     }
-    
+
     // Handle form submission
     if (btnSubmitFeedback) {
         btnSubmitFeedback.addEventListener('click', () => {
@@ -1270,34 +1270,34 @@ function initFeedbackForm() {
                 feedbackStatus.classList.remove('hidden');
                 return;
             }
-            
+
             feedbackStatus.innerText = currentLanguage === 'he' ? "⌛ שולח משוב..." : "⌛ Submitting feedback...";
             feedbackStatus.className = "feedback-status";
             feedbackStatus.classList.remove('hidden');
             btnSubmitFeedback.disabled = true;
-            
+
             const feedbackData = {
                 stars: selectedRating,
                 comment: feedbackComment.value.trim(),
                 title: lastGeneratedGameData ? lastGeneratedGameData.title : "לא נוצר",
                 boardsCount: lastGeneratedGameData ? lastGeneratedGameData.boards.length : 0
             };
-            
+
             // Check if Google Sheet Web App URL is configured
             if (!GOOGLE_SCRIPT_URL) {
                 // Save locally for demonstration/testing
                 let localFeedbacks = [];
                 try {
                     localFeedbacks = JSON.parse(localStorage.getItem('bingo_local_feedbacks') || '[]');
-                } catch(e) {}
-                
+                } catch (e) { }
+
                 localFeedbacks.push({
                     date: new Date().toLocaleString(),
                     ...feedbackData
                 });
-                
+
                 localStorage.setItem('bingo_local_feedbacks', JSON.stringify(localFeedbacks));
-                
+
                 setTimeout(() => {
                     if (currentLanguage === 'he') {
                         feedbackStatus.innerHTML = `❤️ תודה! המשוב נשמר מקומית בדפדפן (כיוון שטרם הוגדר קישור ל-Google Sheets).<br><span style="font-size: 0.8rem; color: var(--text-secondary);">בדקו את ה-Console או ה-LocalStorage כדי לראות את הנתונים.</span>`;
@@ -1306,7 +1306,7 @@ function initFeedbackForm() {
                     }
                     feedbackStatus.className = "feedback-status success";
                     console.log("Local feedbacks stored:", localFeedbacks);
-                    
+
                     // Reset form
                     selectedRating = 0;
                     updateStars(0);
@@ -1315,7 +1315,7 @@ function initFeedbackForm() {
                 }, 800);
                 return;
             }
-            
+
             // Send to Google Sheets Web App
             fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
@@ -1325,25 +1325,25 @@ function initFeedbackForm() {
                 },
                 body: JSON.stringify(feedbackData)
             })
-            .then(() => {
-                feedbackStatus.innerText = currentLanguage === 'he'
-                    ? "❤️ המשוב שלך נשלח בהצלחה ונשמר בגיליון Google Sheets! תודה רבה."
-                    : "❤️ Your feedback was successfully submitted and saved in your Google Sheet!";
-                feedbackStatus.className = "feedback-status success";
-                
-                // Reset form
-                selectedRating = 0;
-                updateStars(0);
-                feedbackComment.value = '';
-                btnSubmitFeedback.disabled = false;
-            })
-            .catch(err => {
-                feedbackStatus.innerText = currentLanguage === 'he'
-                    ? `⚠️ כשל בשליחת המשוב: ${err.message || err}`
-                    : `⚠️ Failed to submit feedback: ${err.message || err}`;
-                feedbackStatus.className = "feedback-status error";
-                btnSubmitFeedback.disabled = false;
-            });
+                .then(() => {
+                    feedbackStatus.innerText = currentLanguage === 'he'
+                        ? "❤️ המשוב שלך נשלח בהצלחה ונשמר בגיליון Google Sheets! תודה רבה."
+                        : "❤️ Your feedback was successfully submitted and saved in your Google Sheet!";
+                    feedbackStatus.className = "feedback-status success";
+
+                    // Reset form
+                    selectedRating = 0;
+                    updateStars(0);
+                    feedbackComment.value = '';
+                    btnSubmitFeedback.disabled = false;
+                })
+                .catch(err => {
+                    feedbackStatus.innerText = currentLanguage === 'he'
+                        ? `⚠️ כשל בשליחת המשוב: ${err.message || err}`
+                        : `⚠️ Failed to submit feedback: ${err.message || err}`;
+                    feedbackStatus.className = "feedback-status error";
+                    btnSubmitFeedback.disabled = false;
+                });
         });
     }
 }

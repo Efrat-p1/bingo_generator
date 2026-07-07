@@ -36,30 +36,30 @@ function generateBalancedBoards(numBoards, boardSize, numImages, maxRestarts = 1
     const K = boardSize;
     const N = numBoards;
     const M = numImages;
-    
+
     // Calculate total unique combinations
     const totalCombinations = getCombinationsCount(M, K);
     const allowDuplicates = N > totalCombinations;
-    
+
     for (let restart = 0; restart < maxRestarts; restart++) {
         const totalCells = N * K;
         const baseCap = Math.floor(totalCells / M);
         const remCap = totalCells % M;
-        
+
         // Initialize target capacities
         let capacities = new Array(M).fill(baseCap);
-        
+
         // Randomly assign the remainder (+1 capacity) to remCap images
         let imgIndices = Array.from({ length: M }, (_, i) => i);
         shuffleArray(imgIndices);
         for (let i = 0; i < remCap; i++) {
             capacities[imgIndices[i]] += 1;
         }
-        
+
         let appearanceCounts = new Array(M).fill(0); // actual appearance counts
         let boards = [];
         let boardsSet = new Set();
-        
+
         let success = true;
         for (let bIdx = 0; bIdx < N; bIdx++) {
             let boardFound = false;
@@ -72,21 +72,21 @@ function generateBalancedBoards(numBoards, boardSize, numImages, maxRestarts = 1
                     let noise = Math.random() * (0.5 + retry * 0.5);
                     scores.push({ score: rem + noise, index: j });
                 }
-                
+
                 // Sort descending by score
                 scores.sort((a, b) => b.score - a.score);
-                
+
                 // Select top K elements and sort indices to make a unique board representation
                 let candidateBoard = scores.slice(0, K).map(x => x.index).sort((a, b) => a - b);
                 let boardKey = candidateBoard.join(',');
-                
+
                 const forceUnique = !allowDuplicates || (boardsSet.size < totalCombinations && retry < maxRetries - 5);
                 const isUnique = !boardsSet.has(boardKey);
-                
+
                 if (isUnique || !forceUnique) {
                     boards.push(candidateBoard);
                     boardsSet.add(boardKey);
-                    
+
                     // Update appearance counts
                     for (let img of candidateBoard) {
                         appearanceCounts[img]++;
@@ -95,14 +95,14 @@ function generateBalancedBoards(numBoards, boardSize, numImages, maxRestarts = 1
                     break;
                 }
             }
-            
+
             if (!boardFound) {
                 // Stuck, restart entire generation
                 success = false;
                 break;
             }
         }
-        
+
         if (success) {
             // Calculate max deviation from targets
             let maxDev = 0;
@@ -120,7 +120,7 @@ function generateBalancedBoards(numBoards, boardSize, numImages, maxRestarts = 1
             };
         }
     }
-    
+
     throw new Error(
         "נכשלו ניסיונות ייצור לוחות מאוזנים לאחר מספר רב של אתחולים. " +
         "אנא נסה להעלות תמונות נוספות או להקטין את מספר המשתתפים."

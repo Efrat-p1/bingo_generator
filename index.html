@@ -1,38 +1,44 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="docTitle">🎲 Custom Picture Bingo Generator 🎉</title>
-    
+
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Create custom, balanced picture bingo cards online for free! Upload your own photos, shuffle them, and download as PDF or PowerPoint for easy printing. Perfect for kids, classrooms, and parties.">
-    <meta name="keywords" content="picture bingo generator, custom bingo cards, free bingo maker, printable photo bingo, kid bingo generator, classroom bingo layout, animal bingo printable, family photo bingo">
-    
+    <meta name="description"
+        content="Create custom, balanced picture bingo cards online for free! Upload your own photos, shuffle them, and download as PDF or PowerPoint for easy printing. Perfect for kids, classrooms, and parties.">
+    <meta name="keywords"
+        content="picture bingo generator, custom bingo cards, free bingo maker, printable photo bingo, kid bingo generator, classroom bingo layout, animal bingo printable, family photo bingo">
+
     <!-- Google Fonts: Rubik (Hebrew) & Outfit (Latin/UI) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Rubik:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
+
     <!-- PPTXGenJS CDN for PowerPoint generation -->
     <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
-    
+
     <!-- html2pdf.js CDN for PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    
+
     <!-- Custom stylesheet -->
     <link rel="stylesheet" href="css/style.css">
-    
+
     <!-- Google Analytics (GA4) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-WB2ELGG230"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-WB2ELGG230');
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-WB2ELGG230');
     </script>
 </head>
+
 <body>
     <div class="app-container">
         <!-- Language Switcher -->
@@ -48,9 +54,14 @@
                 <span class="logo-icon">🎲</span>
                 <h1 data-i18n="appTitle">Custom Picture Bingo Generator 🎉</h1>
             </div>
-            <p data-i18n="appSubtitle">Create unique and balanced bingo boards with photos you love! Perfect for toddlers and kids (no reading required). Upload images, generate a printable layout, and start playing.</p>
-            <p class="privacy-note" style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 5px;">
-                <span>🔒</span> <b data-i18n="privacyNoteB">We value your privacy:</b> <span data-i18n="privacyNoteText">All image processing and algorithms run locally on your computer. Your photos are never saved or uploaded to any server!</span>
+            <p data-i18n="appSubtitle">Create unique and balanced bingo boards with photos you love! Perfect for
+                toddlers and kids (no reading required). Upload images, generate a printable layout, and start playing.
+            </p>
+            <p class="privacy-note"
+                style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                <span>🔒</span> <b data-i18n="privacyNoteB">We value your privacy:</b> <span
+                    data-i18n="privacyNoteText">All image processing and algorithms run locally on your computer. Your
+                    photos are never saved or uploaded to any server!</span>
             </p>
         </header>
 
@@ -59,12 +70,13 @@
             <!-- Sidebar: Settings -->
             <section class="settings-panel card">
                 <h2 data-i18n="settingsTitle">⚙️ Game Settings</h2>
-                
+
                 <div class="input-group">
                     <label for="game-title" data-i18n="gameTitleLabel">Game Title (up to 35 chars)</label>
-                    <textarea id="game-title" data-i18n-placeholder="gameTitlePlaceholder" placeholder="e.g. Animal Bingo" maxlength="35" rows="2">Picture Bingo</textarea>
+                    <textarea id="game-title" data-i18n-placeholder="gameTitlePlaceholder"
+                        placeholder="e.g. Animal Bingo" maxlength="35" rows="2">Picture Bingo</textarea>
                 </div>
-                
+
                 <div class="input-group">
                     <label data-i18n="boardSizeLabel">Board Size</label>
                     <div class="grid-selector">
@@ -73,7 +85,7 @@
                             <strong data-i18n="grid3x3Title">3x3</strong>
                             <span data-i18n="grid3x3Desc">9 cells (at least 10 images)</span>
                         </label>
-                        
+
                         <input type="radio" id="grid-3x4" name="grid-size" value="3x4">
                         <label for="grid-3x4" class="selector-btn">
                             <strong data-i18n="grid3x4Title">3x4</strong>
@@ -93,21 +105,23 @@
                         </label>
                     </div>
                 </div>
-                
+
                 <div class="input-group">
-                    <label for="num-participants" data-i18n="numParticipantsLabel">Number of participants (boards)</label>
+                    <label for="num-participants" data-i18n="numParticipantsLabel">Number of participants
+                        (boards)</label>
                     <div class="number-counter">
                         <button type="button" id="btn-dec" class="counter-btn">-</button>
                         <input type="number" id="num-participants" value="25" min="1" max="1000">
                         <button type="button" id="btn-inc" class="counter-btn">+</button>
                     </div>
                 </div>
-                
+
                 <div class="input-group">
                     <label for="cards-per-page" data-i18n="cardsPerPageLabel">Boards per page for printing</label>
                     <select id="cards-per-page" class="app-select">
                         <option value="1" data-i18n="cardsPerPage1">1 board per page (Portrait)</option>
-                        <option value="2" selected data-i18n="cardsPerPage2">2 boards per page (Landscape - Default)</option>
+                        <option value="2" selected data-i18n="cardsPerPage2">2 boards per page (Landscape - Default)
+                        </option>
                         <option value="4" data-i18n="cardsPerPage4">4 boards per page (Portrait)</option>
                         <option value="6" data-i18n="cardsPerPage6">6 boards per page (Landscape)</option>
                     </select>
@@ -120,38 +134,53 @@
 
             <!-- Main Content Area: Image Uploads -->
             <section class="upload-panel card">
-                <h2><span data-i18n="uploadPanelTitle">📸 Upload Images</span> <span id="uploaded-count-badge" style="font-size: 0.9rem; background: rgba(99, 102, 241, 0.2); color: #818cf8; padding: 4px 12px; border-radius: 20px; margin-inline-start: 10px; font-weight: 600; display: none; vertical-align: middle;">0 images uploaded</span></h2>
-                
+                <h2><span data-i18n="uploadPanelTitle">📸 Upload Images</span> <span id="uploaded-count-badge"
+                        style="font-size: 0.9rem; background: rgba(99, 102, 241, 0.2); color: #818cf8; padding: 4px 12px; border-radius: 20px; margin-inline-start: 10px; font-weight: 600; display: none; vertical-align: middle;">0
+                        images uploaded</span></h2>
+
                 <!-- Drag and Drop Zone -->
                 <div class="drag-drop-zone" id="drop-zone">
                     <div class="zone-content">
                         <span class="upload-icon">📤</span>
-                        <p data-i18n="dragDropText">Drag and drop image files here or <span>click to select files</span></p>
+                        <p data-i18n="dragDropText">Drag and drop image files here or <span>click to select files</span>
+                        </p>
                         <span class="file-limits" data-i18n="fileLimits">PNG, JPG, JPEG, WEBP files only</span>
                     </div>
                 </div>
                 <input type="file" id="file-input" multiple accept="image/*" class="file-input-hidden">
-                
+
                 <!-- Unsplash Search -->
-                <div class="unsplash-search-container" style="margin-top: 1.5rem; background: rgba(255, 255, 255, 0.03); padding: 1rem; border-radius: 8px; border: 1px solid var(--card-border);">
-                    <h3 data-i18n="unsplashTitle" style="font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 500;">🔍 <span data-i18n="unsplashText">Or search Unsplash for images</span></h3>
+                <div class="unsplash-search-container"
+                    style="margin-top: 1.5rem; background: rgba(255, 255, 255, 0.03); padding: 1rem; border-radius: 8px; border: 1px solid var(--card-border);">
+                    <h3 data-i18n="unsplashTitle" style="font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 500;">🔍
+                        <span data-i18n="unsplashText">Or search Unsplash for images</span></h3>
                     <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
-                        <input type="text" id="unsplash-query" data-i18n-placeholder="unsplashPlaceholder" placeholder="e.g. dog, cat, sun..." style="flex: 1; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--card-border); background: var(--bg-dark); color: var(--text-primary); font-family: inherit;">
-                        <button type="button" id="btn-unsplash-search" class="btn-primary" style="width: auto; padding: 0 1.5rem;" data-i18n="btnSearch">Search</button>
+                        <input type="text" id="unsplash-query" data-i18n-placeholder="unsplashPlaceholder"
+                            placeholder="e.g. dog, cat, sun..."
+                            style="flex: 1; padding: 0.8rem; border-radius: 8px; border: 1px solid var(--card-border); background: var(--bg-dark); color: var(--text-primary); font-family: inherit;">
+                        <button type="button" id="btn-unsplash-search" class="btn-primary"
+                            style="width: auto; padding: 0 1.5rem;" data-i18n="btnSearch">Search</button>
                     </div>
-                    <div id="unsplash-message" style="display: none; font-size: 0.85rem; padding: 0.4rem 0.6rem; border-radius: 6px; background: rgba(99, 102, 241, 0.1); color: #818cf8; margin-bottom: 0.5rem; line-height: 1.4;"></div>
-                    <div id="unsplash-loading" style="display: none; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;" data-i18n="unsplashLoading">Searching Unsplash...</div>
-                    <div id="unsplash-results" class="images-grid" style="grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 10px; display: none;"></div>
+                    <div id="unsplash-message"
+                        style="display: none; font-size: 0.85rem; padding: 0.4rem 0.6rem; border-radius: 6px; background: rgba(99, 102, 241, 0.1); color: #818cf8; margin-bottom: 0.5rem; line-height: 1.4;">
+                    </div>
+                    <div id="unsplash-loading"
+                        style="display: none; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.5rem;"
+                        data-i18n="unsplashLoading">Searching Unsplash...</div>
+                    <div id="unsplash-results" class="images-grid"
+                        style="grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 10px; display: none;">
+                    </div>
                 </div>
-                
+
                 <!-- Upload Progress & Status -->
                 <div class="upload-status" id="upload-status">
                     <div class="status-bar-container">
                         <div class="status-bar" id="status-bar" style="width: 0%;"></div>
                     </div>
-                    <p id="status-text" data-i18n="statusTextInitial">No images uploaded yet. Please upload at least <span id="min-req-text">10</span> images.</p>
+                    <p id="status-text" data-i18n="statusTextInitial">No images uploaded yet. Please upload at least
+                        <span id="min-req-text">10</span> images.</p>
                 </div>
-                
+
                 <!-- Images Cards Grid -->
                 <div class="images-grid" id="images-grid">
                     <!-- Cards will be dynamically generated here -->
@@ -162,39 +191,41 @@
         <!-- Output & Statistics Section (Hidden initially) -->
         <section class="stats-panel card hidden" id="stats-panel">
             <div class="stats-header">
-                 <h2 data-i18n="statsTitleText">📊 Board Stats & Live Preview</h2>
-                 <div class="download-actions">
-                     <div class="format-selector">
-                         <input type="radio" id="format-pptx" name="file-format" value="pptx" checked>
-                         <label for="format-pptx" class="format-btn">
-                             PowerPoint (PPTX)
-                         </label>
-                         
-                         <input type="radio" id="format-pdf" name="file-format" value="pdf">
-                         <label for="format-pdf" class="format-btn" data-i18n="formatPdfLabel">
-                             PDF Document
-                         </label>
-                     </div>
-                     <button type="button" class="btn-primary" id="btn-download-again" data-i18n="btnDownload">📥 Download Printable File</button>
-                 </div>
-             </div>
-            
+                <h2 data-i18n="statsTitleText">📊 Board Stats & Live Preview</h2>
+                <div class="download-actions">
+                    <div class="format-selector">
+                        <input type="radio" id="format-pptx" name="file-format" value="pptx" checked>
+                        <label for="format-pptx" class="format-btn">
+                            PowerPoint (PPTX)
+                        </label>
+
+                        <input type="radio" id="format-pdf" name="file-format" value="pdf">
+                        <label for="format-pdf" class="format-btn" data-i18n="formatPdfLabel">
+                            PDF Document
+                        </label>
+                    </div>
+                    <button type="button" class="btn-primary" id="btn-download-again" data-i18n="btnDownload">📥
+                        Download Printable File</button>
+                </div>
+            </div>
+
             <div id="download-warning" class="download-warning hidden"></div>
-            
-             <!-- Board Preview Section -->
-             <div class="preview-section" id="preview-section">
-                 <h3 data-i18n="previewTitle">👀 Live Bingo Boards Preview</h3>
-                 <div class="browser-controls">
-                     <button type="button" class="btn-secondary" id="btn-prev-board" data-i18n="btnPrev">◀️ Previous</button>
-                     <span id="board-counter" class="board-counter">Page 1 of 1</span>
-                     <button type="button" class="btn-secondary" id="btn-next-board" data-i18n="btnNext">Next ▶️</button>
-                 </div>
-                 <div class="browser-container">
-                     <div class="preview-card" id="active-preview-card">
-                         <!-- Board will be rendered here dynamically -->
-                     </div>
-                 </div>
-             </div>
+
+            <!-- Board Preview Section -->
+            <div class="preview-section" id="preview-section">
+                <h3 data-i18n="previewTitle">👀 Live Bingo Boards Preview</h3>
+                <div class="browser-controls">
+                    <button type="button" class="btn-secondary" id="btn-prev-board" data-i18n="btnPrev">◀️
+                        Previous</button>
+                    <span id="board-counter" class="board-counter">Page 1 of 1</span>
+                    <button type="button" class="btn-secondary" id="btn-next-board" data-i18n="btnNext">Next ▶️</button>
+                </div>
+                <div class="browser-container">
+                    <div class="preview-card" id="active-preview-card">
+                        <!-- Board will be rendered here dynamically -->
+                    </div>
+                </div>
+            </div>
 
             <div class="stats-cards" style="margin-top: 1.5rem; margin-bottom: 1.5rem;">
                 <div class="stat-card">
@@ -218,33 +249,37 @@
                     <span class="stat-label" data-i18n="statAverageLabel">Average Appearances</span>
                 </div>
             </div>
-            
+
             <div class="stats-visuals">
                 <div class="table-container" style="max-height: none;">
-                    <h3 style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 0.5rem; margin-bottom: 0.8rem;" data-i18n="statsFreqTitle">📊 Image Appearance Summary</h3>
-                    <div id="stats-frequency-summary" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.5rem; line-height: 1.5;">
+                    <h3 style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 0.5rem; margin-bottom: 0.8rem;"
+                        data-i18n="statsFreqTitle">📊 Image Appearance Summary</h3>
+                    <div id="stats-frequency-summary"
+                        style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.5rem; line-height: 1.5;">
                         <!-- Grouped frequencies will go here -->
                     </div>
-                    
-                    <h3 style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 0.5rem; margin-bottom: 0.8rem; margin-top: 1.5rem;" data-i18n="statsDupTitle">🔍 Board Uniqueness Analysis (Duplicate Boards)</h3>
-                    <div id="stats-duplicates-summary" style="display: flex; flex-direction: column; gap: 6px; line-height: 1.5;">
+
+                    <h3 style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 0.5rem; margin-bottom: 0.8rem; margin-top: 1.5rem;"
+                        data-i18n="statsDupTitle">🔍 Board Uniqueness Analysis (Duplicate Boards)</h3>
+                    <div id="stats-duplicates-summary"
+                        style="display: flex; flex-direction: column; gap: 6px; line-height: 1.5;">
                         <!-- Duplicate boards analysis will go here -->
                     </div>
                 </div>
             </div>
         </section>
-        
+
         <!-- SEO Content Block Panel -->
         <section class="seo-content-panel card" id="seo-content-panel">
             <!-- Dynamic SEO article loaded via JS based on current language -->
         </section>
-        
+
         <!-- Footer & Feedback Section -->
         <footer class="app-footer">
             <div class="feedback-card card">
                 <h3 data-i18n="feedbackTitle">💬 We'd love to hear from you!</h3>
                 <p data-i18n="feedbackSubtitle">How was your experience designing custom bingo boards?</p>
-                
+
                 <div class="stars-rating" id="stars-rating">
                     <span class="star" data-value="1">★</span>
                     <span class="star" data-value="2">★</span>
@@ -252,16 +287,21 @@
                     <span class="star" data-value="4">★</span>
                     <span class="star" data-value="5">★</span>
                 </div>
-                
-                <div class="input-group" style="width: 100%; max-width: 450px; margin-top: 0.5rem; margin-bottom: 0.5rem;">
-                    <textarea id="feedback-comment" data-i18n-placeholder="feedbackPlaceholder" placeholder="Comments, suggestions, or kind words..." rows="2" style="width: 100%;"></textarea>
+
+                <div class="input-group"
+                    style="width: 100%; max-width: 450px; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+                    <textarea id="feedback-comment" data-i18n-placeholder="feedbackPlaceholder"
+                        placeholder="Comments, suggestions, or kind words..." rows="2" style="width: 100%;"></textarea>
                 </div>
-                
-                <button type="button" id="btn-submit-feedback" class="btn-primary" style="margin-top: 0.5rem; width: auto; padding: 0.6rem 2.5rem; margin-left: auto; margin-right: auto; display: block;" data-i18n="btnSubmitFeedback">Submit Feedback</button>
+
+                <button type="button" id="btn-submit-feedback" class="btn-primary"
+                    style="margin-top: 0.5rem; width: auto; padding: 0.6rem 2.5rem; margin-left: auto; margin-right: auto; display: block;"
+                    data-i18n="btnSubmitFeedback">Submit Feedback</button>
                 <p id="feedback-status" class="feedback-status hidden"></p>
             </div>
-            
-            <p class="copyright" data-i18n="copyright">Custom Picture Bingo Generator for Kids © 2026 | Version v1.0.1</p>
+
+            <p class="copyright" data-i18n="copyright">Custom Picture Bingo Generator for Kids © 2026 | Version v1.0.1
+            </p>
         </footer>
     </div>
 
@@ -272,4 +312,5 @@
     <script src="/js/pdf_builder.js"></script>
     <script type="module" src="/js/app.js"></script>
 </body>
+
 </html>
