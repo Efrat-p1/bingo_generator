@@ -1305,8 +1305,7 @@ function initFeedbackForm() {
                         feedbackStatus.innerHTML = `❤️ Thank you! Your feedback was saved locally in the browser (as no Google Sheets integration is configured).<br><span style="font-size: 0.8rem; color: var(--text-secondary);">Check the Console or LocalStorage to view the data.</span>`;
                     }
                     feedbackStatus.className = "feedback-status success";
-                    console.log("Local feedbacks stored:", localFeedbacks);
-
+                    
                     // Reset form
                     selectedRating = 0;
                     updateStars(0);
