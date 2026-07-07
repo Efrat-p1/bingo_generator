@@ -1,0 +1,18 @@
+{
+  "name": "2_bingo_generator",
+  "version": "1.0.0",
+  "description": "מערכת אינטראנט מתקדמת ומודרנית (HTML5, CSS3, JavaScript ES6) ליצירת לוחות בינגו מבוססי תמונות בעיצוב אישי.  היישום פועל **בצד הלקוח בלבד (Client-Side Only)** ללא צורך בשרת, ומיועד להפעלה מהירה מקומית או לפריסה חינמית ב-**GitHub Pages**. מיועד במיוחד לפעילויות לילדים, גנים, בתי ספר וימי הולדת (מתאים גם לילדים שטרם למדו לקרוא).",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "vite": "^8.1.3"
+  }
+}
