@@ -553,23 +553,6 @@ function deleteUploadedImage(id) {
 }
 
 /**
- * Checks for spelling suggestions using Wikipedia OpenSearch API.
- */
-async function checkSpelling(word, lang) {
-    try {
-        const url = `https://${lang}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(word)}&utf8=&format=json&srinfo=suggestion&origin=*`;
-        const res = await fetch(url);
-        const data = await res.json();
-        if (data.query && data.query.searchinfo && data.query.searchinfo.suggestion) {
-            return data.query.searchinfo.suggestion;
-        }
-    } catch (e) {
-        console.warn("Spellcheck failed:", e);
-    }
-    return null;
-}
-
-/**
  * Translates Hebrew text to English using MyMemory Translation API (CORS friendly).
  */
 async function translateToEnglish(text) {
@@ -614,21 +597,11 @@ async function handleUnsplashSearch() {
     try {
         let finalQuery = query;
         let messageHtml = '';
-        let originalQuery = query;
-        let spellingCorrected = false;
 
         // 1. Detect if it's Hebrew
         const isHebrew = /[\u0590-\u05FF]/.test(query);
-        const lang = isHebrew ? 'he' : 'en';
 
-        // 2. Spellcheck
-        const suggestion = await checkSpelling(query, lang);
-        if (suggestion) {
-            finalQuery = suggestion;
-            spellingCorrected = true;
-        }
-
-        // 3. Translate if Hebrew
+        // 2. Translate if Hebrew
         let translatedText = '';
         if (isHebrew) {
             const englishTranslation = await translateToEnglish(finalQuery);
@@ -638,22 +611,16 @@ async function handleUnsplashSearch() {
             }
         }
 
-        // 4. Construct transparent message
+        // 3. Construct transparent message
         if (currentLanguage === 'he') {
             messageHtml += `מחפש ב-Unsplash עבור: <b>${finalQuery}</b><br>`;
-            if (spellingCorrected) {
-                messageHtml += `<span style="opacity: 0.8; font-size: 0.8rem;">(תיקון שגיאת כתיב מ-"${originalQuery}")</span><br>`;
-            }
             if (translatedText) {
-                messageHtml += `<span style="opacity: 0.8; font-size: 0.8rem;">(תורגם מעברית)</span>`;
+                messageHtml += `<span style="opacity: 0.8; font-size: 0.8rem;">(תורגם מעברית מ-"${query}")</span>`;
             }
         } else {
             messageHtml += `Searching Unsplash for: <b>${finalQuery}</b><br>`;
-            if (spellingCorrected) {
-                messageHtml += `<span style="opacity: 0.8; font-size: 0.8rem;">(Spelling corrected from "${originalQuery}")</span><br>`;
-            }
             if (translatedText) {
-                messageHtml += `<span style="opacity: 0.8; font-size: 0.8rem;">(Translated from Hebrew)</span>`;
+                messageHtml += `<span style="opacity: 0.8; font-size: 0.8rem;">(Translated from Hebrew: "${query}")</span>`;
             }
         }
 
