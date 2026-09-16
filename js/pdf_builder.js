@@ -7,7 +7,7 @@
  * @param {number} gridCols - Number of columns
  * @returns {Promise<void>} Resolves when the PDF generation completes
  */
-function buildBingoPdf(gameData, gridRows, gridCols, cardsPerPage = 2) {
+export function buildBingoPdf(gameData, gridRows, gridCols, cardsPerPage = 2) {
     return new Promise((resolve, reject) => {
         try {
             const title = gameData.title;

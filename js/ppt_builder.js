@@ -8,7 +8,7 @@
  * @param {number} cardsPerPage - Number of cards per slide (1, 2, 4, 6)
  * @returns {Promise<void>} Resolves when the presentation file is created and triggered for download
  */
-function buildBingoPptx(gameData, gridRows, gridCols, cardsPerPage = 2) {
+export function buildBingoPptx(gameData, gridRows, gridCols, cardsPerPage = 2) {
     return new Promise((resolve, reject) => {
         try {
             const title = gameData.title;

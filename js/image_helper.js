@@ -5,7 +5,7 @@
  * @param {File} file - The uploaded file object
  * @returns {Promise<object>} Promise resolving to { dataUrl, aspectRatio }
  */
-function processImageFile(file) {
+export function processImageFile(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         

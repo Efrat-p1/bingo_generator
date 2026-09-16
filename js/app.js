@@ -1,3 +1,8 @@
+import { getCombinationsCount, shuffleArray, generateBalancedBoards } from './balancing.js';
+import { processImageFile } from './image_helper.js';
+import { buildBingoPptx } from './ppt_builder.js';
+import { buildBingoPdf } from './pdf_builder.js';
+
 // Google Sheets Web App URL Configuration
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyEEc086LfA0wIRGbHy4j76DALgYXukJyOFNpvKBQslNWRHNXXJCjVfMsNiiXwsb3WY/exec";
 

@@ -1,7 +1,7 @@
 /**
  * Calculates the number of unique combinations (n choose k).
  */
-function getCombinationsCount(n, k) {
+export function getCombinationsCount(n, k) {
     if (k < 0 || k > n) return 0;
     if (k === 0 || k === n) return 1;
     if (k > n / 2) k = n - k;
@@ -15,7 +15,7 @@ function getCombinationsCount(n, k) {
 /**
  * Shuffles an array in-place using the Fisher-Yates algorithm.
  */
-function shuffleArray(array) {
+export function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
@@ -32,7 +32,7 @@ function shuffleArray(array) {
  * @param {number} maxRetries - Maximum retries inside the loop to find a unique board
  * @returns {object} Object containing boards, actual counts, target capacities, and maxDeviation
  */
-function generateBalancedBoards(numBoards, boardSize, numImages, maxRestarts = 100, maxRetries = 100) {
+export function generateBalancedBoards(numBoards, boardSize, numImages, maxRestarts = 100, maxRetries = 100) {
     const K = boardSize;
     const N = numBoards;
     const M = numImages;
