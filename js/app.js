@@ -594,9 +594,9 @@ async function handleUnsplashSearch() {
     if (!query) return;
 
     // Check if API key is configured
-    const apiKey = typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_UNSPLASH_API_KEY
+    const apiKey = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_UNSPLASH_API_KEY)
         ? import.meta.env.VITE_UNSPLASH_API_KEY
-        : null;
+        : "zKC9J2i70jakJfN8BnMRgyZ9TKh4P2VZqWzfKfnM_iM";
 
     if (!apiKey || apiKey === 'your_unsplash_access_key_here') {
         alert(currentLanguage === 'he'
